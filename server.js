@@ -50,7 +50,7 @@ app.use('/auth', authRoutes);
 // This route is specifically for displaying the login form, NOT for processing login POST requests.
 // The POST /auth/login is handled in authRoutes.js using Passport.
 app.get('/auth/login',(req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'contact.html'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 app.get('/auth/success', isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

@@ -1,12 +1,52 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
-const authController = require('../controllers/authController'); // Still need for register, verify, etc.
-// const googleAuthController = require('../controllers/googleAuthController');
+const authController = require('../controllers/authController');
+// const googleAuthController = require('../controllers/googleAuthController'); // Assuming googleAuthController has a direct method, otherwise integrate its logic
 const isAuthenticated = require('../middleware/isAuthenticated');
 const { sendEmail } = require('../utils/sendEmail');
 
-// ... (handleGoogleCallback function as defined in previous authRoutes.js correction) ...
+// Helper function for Google Callback (can be moved to googleAuthController.js if preferred)
+const handleGoogleCallback = async (req, res, next) => { // Added 'next'
+    try {
+        // IMPORTANT: Add a check for isVerified for Google login as well
+        if (!req.user || !req.user.isVerified) { // Check if req.user exists before accessing isVerified
+            req.logout((err) => { // Added 'err' callback
+                if (err) { console.error('Logout error during unverified Google login:', err); return next(err); } // Pass error to next
+                req.session.email = req.user ? req.user.email : ''; // Store email for OTP verification (handle req.user possibly null)
+                // Corrected redirect for verify-otp if it's on frontend
+                return res.redirect(process.env.FRONTEND_URL + '/verify-otp.html?error=not_verified_google');
+            });
+            return;
+        }
+
+        // ✅ Send welcome email
+        const subject = '✅ You’ve Signed In to Adnex Technologies (via Google)';
+        const html = `
+            <div style="padding:20px;font-family:sans-serif;">
+                <h2>Welcome, ${req.user.username}!</h2>
+                <p>You’ve successfully logged in using your Google account.</p>
+                <p>Thanks for joining Adnex Technologies 🚀</p>
+            </div>
+        `;
+
+        await sendEmail({
+            to: req.user.email,
+            subject,
+            html
+        });
+
+        // ✅ Redirect to saved page or home
+        const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html'; // Default to frontend home
+        delete req.session.returnTo; // Clean up session
+        return res.redirect(redirectUrl);
+
+    } catch (err) {
+        console.error('Error during Google login callback:', err);
+        return res.redirect(process.env.FRONTEND_URL + '/login.html?login=google_error'); // Redirect to frontend login on error
+    }
+};
+
 
 // CORRECTED: GET registration page - REDIRECT to frontend
 router.get('/register', (req, res) => {
@@ -31,81 +71,31 @@ router.get('/login', (req, res) => {
 
 // MODIFIED: POST login form submission using Passport's local strategy
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error',
+    failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error', // Redirect on failure
     failureFlash: false
-}), async (req, res, next) => { // Make it async to use await for sendEmail
-    try {
-        // --- Logic from authController.login moved here ---
-        if (!req.user.isVerified) {
-            req.logout((err) => { // Added 'err' parameter
-                if (err) { console.error('Logout error during unverified login:', err); return next(err); } // Pass error to next
-                req.session.email = req.user.email;
-                return res.redirect(`${process.env.FRONTEND_URL}/verify-otp.html?error=not_verified`);
-            });
-            return;
-        }
+}), (req, res) => { // Added a direct callback here instead of authController.login
+    // This code runs ONLY on successful local authentication
+    // Passport has already established the session (req.login() was called internally)
 
-        // Send welcome email
-        const subject = '✅ You’ve Signed In to Adnex Technologies';
-        const html = `<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f4f6f8;">
-            <div style="max-width:600px;margin:30px auto;background:#fff;padding:40px;border-radius:8px;text-align:center;">
-                <img src="https://adnextechnologies.in/images/logo-new.png" alt="Adnex Technologies" style="height:40px;margin-bottom:20px;">
-                <h2 style="margin:0;color:#0b2161;font-size:22px;">Login Successful!</h2>
-                <p style="color:#333;font-size:16px;line-height:1.5;margin:20px 0;">
-                    Hey ${req.user.username}, you're now securely logged into your Adnex Technologies account.
-                </p>
-                <p style="font-size:16px;color:#555;line-height:1.5;">At Adnex, we specialize in:</p>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:20px auto;">
-                    <tr>
-                        <td style="padding:0 20px;">
-                            <p style="font-family:Arial,sans-serif;color:#333;font-size:16px;font-weight:bold;margin-bottom:10px;">
-                                At Adnex, we specialize in:
-                            </p>
-                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
-                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Custom Software Development</td></tr>
-                            </table>
-                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
-                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Web Development</td></tr>
-                            </table>
-                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
-                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Digital Marketing Solutions</td></tr>
-                            </table>
-                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="background:#eef4ff;border-radius:4px;">
-                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• IT Domain Internships</td></tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                <a href="https://adnextechnologies.in/index.html" style="background:#0b2161;color:#fff;padding:12px 24px;border-radius:4px;text-decoration:none;font-weight:bold;">
-                    Explore Our Services
-                </a>
-                <p style="font-size:12px;color:#777;margin-top:30px;">
-                    © 2025 Adnex Technologies • <a href="mailto:adnextechnologies@gmail.com?subject=Adnex%20User" style="color:#0b2161;text-decoration:none;">Contact Support</a>
-                </p>
-            </div>
-        </body>`;
+    // Optional: Send welcome email for local login if you want
+    // const subject = '✅ You’ve Signed In to Adnex Technologies!';
+    // const html = `<div style="padding:20px;font-family:sans-serif;"><h2>Welcome, ${req.user.username}!</h2><p>You’ve successfully logged in.</p><p>Thanks for joining Adnex Technologies 🚀</p></div>`;
+    // sendEmail({ to: req.user.email, subject, html }).catch(console.error);
 
-        await sendEmail({ to: req.user.email, subject, html });
-
-        // Redirect to the stored URL or default to the FRONTEND's index.html
-        const redirectUrl = req.session.returnTo || `${process.env.FRONTEND_URL}/index.html`;
-        delete req.session.returnTo;
-        return res.redirect(redirectUrl);
-
-    } catch (err) {
-        console.error('Login success handler error:', err);
-        return res.redirect(`${process.env.FRONTEND_URL}/login.html?login=error`);
-    }
+    // Redirect to the appropriate frontend page after successful login
+    const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html';
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
 });
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FRONTEND_URL + '/login.html?login=google_error' }), handleGoogleCallback);
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FRONTEND_URL + '/login.html?login=google_error' }), handleGoogleCallback); // Use the new handler
 
 // Logout route
-router.get('/logout', (req, res, next) => {
+router.get('/logout', (req, res, next) => { // Added 'next'
     req.logout((err) => {
-        if (err) { console.error('Logout error:', err); return next(err); }
+        if (err) { console.error('Logout error:', err); return next(err); } // Pass error to next
         req.session.destroy(() => {
             res.redirect(process.env.FRONTEND_URL + '/login.html?loggedout=true');
         });

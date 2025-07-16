@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path');
+const path = require('path'); // You might not need path if not serving local files
 const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/authController');
@@ -15,7 +15,8 @@ exports.googleCallback = async (req, res) => {
             req.logout((err) => {
                 if (err) { console.error('Logout error during unverified Google login:', err); }
                 req.session.email = req.user.email; // Store email for OTP verification
-                return res.redirect('/auth/verify-otp?error=not_verified_google'); // Redirect to verify OTP
+                // Corrected redirect for verify-otp if it's on frontend
+                return res.redirect(process.env.FRONTEND_URL + '/verify-otp.html?error=not_verified_google');
             });
             return;
         }
@@ -37,54 +38,56 @@ exports.googleCallback = async (req, res) => {
         });
 
         // ✅ Redirect to saved page or home
-        const redirectUrl = req.session.returnTo || '/';
+        const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html'; // Default to frontend home
         delete req.session.returnTo;
         return res.redirect(redirectUrl);
 
     } catch (err) {
         console.error('Error during Google login callback:', err);
-        return res.redirect('/');
+        return res.redirect(process.env.FRONTEND_URL + '/login.html?login=google_error'); // Redirect to frontend login on error
     }
 };
 
 
-// GET registration page (No isAuthenticated middleware here)
+// CORRECTED: GET registration page - REDIRECT to frontend
 router.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, '/../public/register.html'));
+    res.redirect(process.env.FRONTEND_URL + '/register.html');
 });
 
 // POST registration form submission
 router.post('/register', authController.register);
 
-// GET verify OTP page (No isAuthenticated middleware here)
+// CORRECTED: GET verify OTP page - REDIRECT to frontend
 router.get('/verify-otp', (req, res) => {
-  res.sendFile(path.join(__dirname, '/../public/verify-otp.html'));
+    res.redirect(process.env.FRONTEND_URL + '/verify-otp.html' + (req.query.email ? `?email=${req.query.email}` : ''));
 });
 
 // POST OTP verification
 router.post('/verify-otp', authController.verifyOtp);
 
-// GET login page (No isAuthenticated middleware here)
+// ✨ CRITICAL FIX: GET login page - REDIRECT to frontend's login.html ✨
 router.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '/../public/login.html'));
+    res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
 });
 
-// ✨ MODIFIED: POST login form submission using Passport's local strategy ✨
+// MODIFIED: POST login form submission using Passport's local strategy
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: '/auth/login?login=error', // Redirect on failure
+    // These failureRedirects should also point to the frontend
+    failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error', // Redirect on failure
     failureFlash: false
 }), authController.login); // authController.login will now only handle email sending and redirection
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/auth/login?login=google_error' }), exports.googleCallback); // Use exports.googleCallback
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FRONTEND_URL + '/login.html?login=google_error' }), exports.googleCallback); // Use exports.googleCallback
 
 // Logout route
 router.get('/logout', (req, res) => {
     req.logout((err) => {
         if (err) { return next(err); }
         req.session.destroy(() => {
-            res.redirect('/auth/login?loggedout=true');
+            // Redirect to frontend's login page after logout
+            res.redirect(process.env.FRONTEND_URL + '/login.html?loggedout=true');
         });
     });
 });

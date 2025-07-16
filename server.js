@@ -10,13 +10,13 @@ require('dotenv').config(); // Load environment variables
 
 // Import routes and middleware
 const authRoutes = require('./routes/authRoutes');
-const isAuthenticated = require('./middleware/isAuthenticated'); // Ensure this path is correct
-require('./config/passport'); // This file sets up Passport strategies (Local, Google)
+const isAuthenticated = require('./middleware/isAuthenticated');
+require('./config/passport');
 
 const app = express();
 
 // --- Core Middleware ---
-app.use(cors({origin: ['https://YOUR_ACTUAL_FRONTEND_URL.onrender.com'], // <-- REPLACE THIS with the URL you copied from Render
+app.use(cors({origin: ['https://adnex-frontend-ui2a.onrender.com'], // Ensure this is your actual Render frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true})); // Enable CORS for all routes
 app.use(morgan('dev')); // HTTP request logger middleware
@@ -42,24 +42,27 @@ app.use(passport.session()); // This enables Passport to use sessions
 app.use(express.static('public'));
 
 // --- Routes ---
-// Use authRoutes for all /auth paths (e.g., /auth/login, /auth/register, /auth/google)
+// --- Static Files (Serve files from 'public' directory - this 'public' is for backend-specific assets, if any) ---
+// Note: If you don't have any static files to serve from the backend's root 'public'
+// other than the 'protected' ones, you could potentially remove this line,
+// but it's usually harmless to keep for future backend-served static content.
+app.use(express.static('public'));
+
+// --- Routes ---
 app.use('/auth', authRoutes);
 
-
-// Corrected: Route for the login page (should serve login.html)
-// This route is specifically for displaying the login form, NOT for processing login POST requests.
-// The POST /auth/login is handled in authRoutes.js using Passport.
-app.get('/auth/login',(req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'contact.html'));
-});
-app.get('/auth/success', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Corrected GET /auth/login route: Redirect to frontend's login page
+app.get('/auth/login', (req, res) => {
+    // FRONTEND_URL is available from process.env because dotenv is configured.
+    res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
 });
 
 
 
 // Protected routes - these will use the isAuthenticated middleware
-app.get('/contact', isAuthenticated, (req, res) => { // Assuming contact page is protected now
+// These files (contact.html, development.html, etc.) are in your backend's 'protected' folder
+// So these routes are correct for serving protected backend-specific HTML.
+app.get('/contact', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'protected', 'contact.html'));
 });
 
@@ -80,25 +83,22 @@ app.get('/digital-html', isAuthenticated, (req, res) => {
 });
 
 
-
-
-
-// ✨ NEW ENDPOINT: Check authentication status from client-side ✨
-// This route is protected. If reached, user is authenticated.
+// NEW ENDPOINT: Check authentication status from client-side
 app.get('/auth/status', isAuthenticated, (req, res) => {
-    // If this middleware is reached, the user is authenticated
-    // req.user is populated by Passport's deserializeUser
     res.status(200).json({ isAuthenticated: true, user: req.user.username });
 });
 
 
-// middleware/isAuthenticated.js
+// This module is imported and used in the routes above.
+// The content below is for reference and should be in './middleware/isAuthenticated.js'
+/*
 module.exports = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/auth/login'); // Redirect to login if not authenticated
 };
+*/
 
 // --- Connect MongoDB and start server ---
 mongoose.connect(process.env.MONGO_URI)

@@ -9,9 +9,9 @@ const colors = require('colors');
 require('dotenv').config(); // Load environment variables
 
 // Import routes and middleware
-const authRoutes = require('../routes/authRoutes');
-const isAuthenticated = require('../middleware/isAuthenticated');
-require('../config/passport');
+const authRoutes = require('./routes/authRoutes');
+const isAuthenticated = require('./middleware/isAuthenticated');
+require('./config/passport');
 
 const app = express();
 

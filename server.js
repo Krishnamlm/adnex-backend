@@ -16,7 +16,9 @@ require('./config/passport'); // This file sets up Passport strategies (Local, G
 const app = express();
 
 // --- Core Middleware ---
-app.use(cors()); // Enable CORS for all routes
+app.use(cors({origin: ['https://YOUR_ACTUAL_FRONTEND_URL.onrender.com'], // <-- REPLACE THIS with the URL you copied from Render
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true})); // Enable CORS for all routes
 app.use(morgan('dev')); // HTTP request logger middleware
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies (for form submissions)
 app.use(express.json()); // Parse JSON bodies

@@ -49,7 +49,12 @@ app.use('/auth', authRoutes);
 
 
 // Route for successful authentication, serving the main index page
-
+app.get('/auth/login',(req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'contact.html'));
+});
+app.get('/auth/success', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 
 // Protected routes - these will use the isAuthenticated middleware

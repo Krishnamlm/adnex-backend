@@ -2,7 +2,12 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const { sendEmail} = require('../utils/sendEmail');
+const { sendEmail } = require('../utils/sendEmail');
+
+// Define your frontend and backend URLs here
+// IMPORTANT: Make sure these are set as environment variables on Render!
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'; // Your deployed Render frontend URL
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000'; // Your deployed Render backend URL
 
 // Create a transporter for nodemailer
 const transporter = nodemailer.createTransport({
@@ -16,10 +21,10 @@ const transporter = nodemailer.createTransport({
 // Send OTP to user email
 const sendOTP = async (email, otp) => {
     await transporter.sendMail({
-    from: `"AdNex Technologies" <${process.env.EMAIL_USER}>`, // Consistent sender name
-    to: email,
-    subject: "OTP Verification - AdNex Technologies", // More descriptive subject
-    html: `<!DOCTYPE html>
+        from: `"AdNex Technologies" <${process.env.EMAIL_USER}>`, // Consistent sender name
+        to: email,
+        subject: "OTP Verification - AdNex Technologies", // More descriptive subject
+        html: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -167,7 +172,7 @@ const sendOTP = async (email, otp) => {
     </table>
 </body>
 </html>`
-});
+    });
 };
 
 // ----------------------- REGISTER -----------------------
@@ -178,8 +183,8 @@ exports.register = async (req, res) => {
     try {
         const userExists = await User.findOne({ email });
         if (userExists) {
-            // Using a more robust way to send a message and redirect without alert()
-            return res.redirect('/auth/register?error=email_exists');
+            // Redirect to frontend's register page with an error parameter
+            return res.redirect(`${FRONTEND_URL}/register.html?error=email_exists`);
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -200,13 +205,14 @@ exports.register = async (req, res) => {
         // Save email in session for OTP verification
         req.session.email = email;
 
-        // Redirect to OTP page with a success message
-        return res.redirect('/auth/verify-otp?otp_sent=success'); // Added success parameter
+        // Redirect to frontend's OTP page with a success message
+        return res.redirect(`${FRONTEND_URL}/verify-otp.html?otp_sent=success`);
 
     } catch (err) {
         console.error('Registration error:', err);
         // If there's a server error during initial registration (before OTP)
-        return res.redirect('/auth/register?registration=error'); // Changed redirect to register page with error
+        // Redirect to frontend's register page with a general error
+        return res.redirect(`${FRONTEND_URL}/register.html?registration=error`);
     }
 };
 
@@ -217,17 +223,20 @@ exports.verifyOtp = async (req, res) => {
 
     try {
         if (!email) {
-            return res.redirect('/auth/login?registration=error_session');
+            // Redirect to frontend's login page if session email is missing
+            return res.redirect(`${FRONTEND_URL}/login.html?registration=error_session`);
         }
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.redirect('/auth/login?registration=error_user_not_found');
+            // Redirect to frontend's login page if user not found (unlikely after session check)
+            return res.redirect(`${FRONTEND_URL}/login.html?registration=error_user_not_found`);
         }
 
         if (user.otp !== otp || user.otpExpires < new Date()) {
-            return res.redirect('/auth/verify-otp?error=invalid_otp'); // Redirect back with error
+            // Redirect back to frontend's verify-otp page with error
+            return res.redirect(`${FRONTEND_URL}/verify-otp.html?error=invalid_otp`);
         }
 
         user.isVerified = true;
@@ -238,13 +247,13 @@ exports.verifyOtp = async (req, res) => {
         // Clear session email
         req.session.email = null;
 
-        // Redirect to login page with success parameter
-        return res.redirect('/auth/login?registration=success');
+        // Redirect to frontend's login page with success parameter
+        return res.redirect(`${FRONTEND_URL}/login.html?registration=success`);
 
     } catch (err) {
         console.error('OTP verification error:', err);
-        // Server error during OTP verification
-        return res.redirect('/auth/login?registration=error'); // General error for toast
+        // Server error during OTP verification, redirect to frontend login
+        return res.redirect(`${FRONTEND_URL}/login.html?registration=error`);
     }
 };
 
@@ -261,7 +270,8 @@ exports.login = async (req, res) => {
             req.logout((err) => {
                 if (err) { console.error('Logout error during unverified login:', err); }
                 req.session.email = req.user.email; // Store email for OTP verification
-                return res.redirect('/auth/verify-otp?error=not_verified'); // Redirect to verify OTP
+                // Redirect to frontend's verify-otp page
+                return res.redirect(`${FRONTEND_URL}/verify-otp.html?error=not_verified`);
             });
             return;
         }
@@ -269,58 +279,58 @@ exports.login = async (req, res) => {
         // Send welcome email - req.user is now available from Passport
         const subject = '✅ You’ve Signed In to Adnex Technologies';
         const html = `<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f4f6f8;">
-    <div style="max-width:600px;margin:30px auto;background:#fff;padding:40px;border-radius:8px;text-align:center;">
-        <img src="https://adnextechnologies.in/images/logo-new.png" alt="Adnex Technologies" style="height:40px;margin-bottom:20px;">
-        <h2 style="margin:0;color:#0b2161;font-size:22px;">Login Successful!</h2>
-        <p style="color:#333;font-size:16px;line-height:1.5;margin:20px 0;">
-            Hey ${req.user.username}, you're now securely logged into your Adnex Technologies account.
-        </p>
+            <div style="max-width:600px;margin:30px auto;background:#fff;padding:40px;border-radius:8px;text-align:center;">
+                <img src="https://adnextechnologies.in/images/logo-new.png" alt="Adnex Technologies" style="height:40px;margin-bottom:20px;">
+                <h2 style="margin:0;color:#0b2161;font-size:22px;">Login Successful!</h2>
+                <p style="color:#333;font-size:16px;line-height:1.5;margin:20px 0;">
+                    Hey ${req.user.username}, you're now securely logged into your Adnex Technologies account.
+                </p>
 
-        <p style="font-size:16px;color:#555;line-height:1.5;">At Adnex, we specialize in:</p>
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:20px auto;">
-    <tr>
-        <td style="padding:0 20px;">
-            <p style="font-family:Arial,sans-serif;color:#333;font-size:16px;font-weight:bold;margin-bottom:10px;">
-                At Adnex, we specialize in:
-            </p>
-            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
-                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Custom Software Development</td></tr>
-            </table>
-            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
-                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Web Development</td></tr>
-            </table>
-            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
-                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Digital Marketing Solutions</td></tr>
-            </table>
-            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="background:#eef4ff;border-radius:4px;">
-                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• IT Domain Internships</td></tr>
-            </table>
-        </td>
-    </tr>
-</table>
-        <a href="https://adnextechnologies.in/index.html" style="background:#0b2161;color:#fff;padding:12px 24px;border-radius:4px;text-decoration:none;font-weight:bold;">
-            Explore Our Services
-        </a>
+                <p style="font-size:16px;color:#555;line-height:1.5;">At Adnex, we specialize in:</p>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:20px auto;">
+                    <tr>
+                        <td style="padding:0 20px;">
+                            <p style="font-family:Arial,sans-serif;color:#333;font-size:16px;font-weight:bold;margin-bottom:10px;">
+                                At Adnex, we specialize in:
+                            </p>
+                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
+                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Custom Software Development</td></tr>
+                            </table>
+                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
+                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Web Development</td></tr>
+                            </table>
+                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom:10px;background:#eef4ff;border-radius:4px;">
+                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• Digital Marketing Solutions</td></tr>
+                            </table>
+                            <table width="100%" cellpadding="10" cellspacing="0" border="0" style="background:#eef4ff;border-radius:4px;">
+                                <tr><td style="font-family:Arial,sans-serif;color:#0b2161;font-size:16px;">• IT Domain Internships</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <a href="https://adnextechnologies.in/index.html" style="background:#0b2161;color:#fff;padding:12px 24px;border-radius:4px;text-decoration:none;font-weight:bold;">
+                    Explore Our Services
+                </a>
 
-        <p style="font-size:12px;color:#777;margin-top:30px;">
-            © 2025 Adnex Technologies • <a href="mailto:adnextechnologies@gmail.com?subject=Adnex%20User" style="color:#0b2161;text-decoration:none;">Contact Support</a>
-        </p>
-    </div>
-</body>
-`;
+                <p style="font-size:12px;color:#777;margin-top:30px;">
+                    © 2025 Adnex Technologies • <a href="mailto:adnextechnologies@gmail.com?subject=Adnex%20User" style="color:#0b2161;text-decoration:none;">Contact Support</a>
+                </p>
+            </div>
+        </body>
+        `;
 
         await sendEmail({ to: req.user.email, subject, html }); // Use req.user.email here
 
-        // Redirect to the stored URL or default to homepage
-        const redirectUrl = req.session.returnTo || '/';
+        // Redirect to the stored URL or default to the backend's success page
+        // (Assuming /auth/success on the backend serves your main protected index.html)
+        const redirectUrl = req.session.returnTo || `${BACKEND_URL}/auth/success`;
 
         delete req.session.returnTo; // Clear the stored URL from session
         return res.redirect(redirectUrl);
 
     } catch (err) {
         console.error('Login error:', err);
-        // This catch block might not be hit if Passport handles the initial error,
-        // but it's good for any errors during email sending or final redirection.
-        return res.redirect('/auth/login?login=error');
+        // In case of any error during email sending or final redirect, go back to frontend login
+        return res.redirect(`${FRONTEND_URL}/login.html?login=error`);
     }
 };

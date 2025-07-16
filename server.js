@@ -46,12 +46,7 @@ app.use(express.static('public'));
 app.use('/auth', authRoutes);
 
 
-// CORRECTED: Route for the login page - now serves login.html
-// This route is specifically for displaying the login form.
-// The POST /auth/login (for actual login processing) is handled in authRoutes.js using Passport.
-app.get('/auth/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html')); // CRITICAL FIX: Serve login.html
-});
+
 
 // Route for successful authentication, serving the main index page
 

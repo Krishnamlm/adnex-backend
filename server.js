@@ -9,9 +9,9 @@ const colors = require('colors');
 require('dotenv').config(); // Load environment variables
 
 // Import routes and middleware
-const authRoutes = require('./routes/authRoutes');
-const isAuthenticated = require('./middleware/isAuthenticated'); // Ensure this path is correct
-require('./config/passport'); // This file sets up Passport strategies (Local, Google)
+const authRoutes = require('../routes/authRoutes');
+const isAuthenticated = require('../middleware/isAuthenticated');
+require('../config/passport');
 
 const app = express();
 

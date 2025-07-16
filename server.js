@@ -16,7 +16,7 @@ require('./config/passport'); // This file sets up Passport strategies (Local, G
 const app = express();
 
 // --- Core Middleware ---
-app.use(cors({origin: ['https://adnex-frontend-ui2a.onrender.com'], // <-- REPLACE THIS with the URL you copied from Render
+app.use(cors({origin: ['https://adnex-frontend-ui2a.onrender.com'], // Ensure this is your actual Render frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true})); // Enable CORS for all routes
 app.use(morgan('dev')); // HTTP request logger middleware
@@ -46,20 +46,21 @@ app.use(express.static('public'));
 app.use('/auth', authRoutes);
 
 
-// Corrected: Route for the login page (should serve login.html)
-// This route is specifically for displaying the login form, NOT for processing login POST requests.
-// The POST /auth/login is handled in authRoutes.js using Passport.
-app.get('/auth/login',(req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-app.get('/auth/success', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// CORRECTED: Route for the login page - now serves login.html
+// This route is specifically for displaying the login form.
+// The POST /auth/login (for actual login processing) is handled in authRoutes.js using Passport.
+app.get('/auth/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html')); // CRITICAL FIX: Serve login.html
 });
 
+// Route for successful authentication, serving the main index page
+app.get('/auth/success', isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serves index.html after successful login
+});
 
 
 // Protected routes - these will use the isAuthenticated middleware
-app.get('/contact', isAuthenticated, (req, res) => { // Assuming contact page is protected now
+app.get('/contact', isAuthenticated, (req, res) => { // Contact page is now protected
     res.sendFile(path.join(__dirname, 'protected', 'contact.html'));
 });
 
@@ -80,10 +81,7 @@ app.get('/digital-html', isAuthenticated, (req, res) => {
 });
 
 
-
-
-
-// ✨ NEW ENDPOINT: Check authentication status from client-side ✨
+// NEW ENDPOINT: Check authentication status from client-side
 // This route is protected. If reached, user is authenticated.
 app.get('/auth/status', isAuthenticated, (req, res) => {
     // If this middleware is reached, the user is authenticated
@@ -92,13 +90,16 @@ app.get('/auth/status', isAuthenticated, (req, res) => {
 });
 
 
-// middleware/isAuthenticated.js
+// This module is imported and used in the routes above.
+// The content below is for reference and should be in './middleware/isAuthenticated.js'
+/*
 module.exports = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/auth/login'); // Redirect to login if not authenticated
 };
+*/
 
 // --- Connect MongoDB and start server ---
 mongoose.connect(process.env.MONGO_URI)

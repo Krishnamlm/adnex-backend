@@ -54,9 +54,7 @@ app.get('/auth/login', (req, res) => {
 });
 
 // Route for successful authentication, serving the main index page
-app.get('/auth/success', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Serves index.html after successful login
-});
+
 
 
 // Protected routes - these will use the isAuthenticated middleware

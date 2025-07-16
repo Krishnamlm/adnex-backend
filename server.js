@@ -42,28 +42,27 @@ app.use(passport.session()); // This enables Passport to use sessions
 app.use(express.static('public'));
 
 // --- Routes ---
-// Use authRoutes for all /auth paths (e.g., /auth/login, /auth/register, /auth/google)
+// --- Static Files (Serve files from 'public' directory - this 'public' is for backend-specific assets, if any) ---
+// Note: If you don't have any static files to serve from the backend's root 'public'
+// other than the 'protected' ones, you could potentially remove this line,
+// but it's usually harmless to keep for future backend-served static content.
+app.use(express.static('public'));
+
 // --- Routes ---
-// Use authRoutes for all /auth paths (e.g., /auth/login, /auth/register, /auth/google)
 app.use('/auth', authRoutes);
 
 // Corrected GET /auth/login route: Redirect to frontend's login page
 app.get('/auth/login', (req, res) => {
-    // Make sure FRONTEND_URL is accessible here.
-    // It should be defined via process.env in a dotenv setup, which you have.
-    // You might want to define FRONTEND_URL as a constant at the top of server.js
-    // or ensure it's loaded via process.env before this line.
+    // FRONTEND_URL is available from process.env because dotenv is configured.
     res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
 });
 
-// Route for successful authentication, serving the main index page (assuming this is backend's protected area)
-app.get('/auth/success', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // This assumes index.html is indeed in backend's public
-});
 
 
 // Protected routes - these will use the isAuthenticated middleware
-app.get('/contact', isAuthenticated, (req, res) => { // Contact page is now protected
+// These files (contact.html, development.html, etc.) are in your backend's 'protected' folder
+// So these routes are correct for serving protected backend-specific HTML.
+app.get('/contact', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'protected', 'contact.html'));
 });
 
@@ -85,10 +84,7 @@ app.get('/digital-html', isAuthenticated, (req, res) => {
 
 
 // NEW ENDPOINT: Check authentication status from client-side
-// This route is protected. If reached, user is authenticated.
 app.get('/auth/status', isAuthenticated, (req, res) => {
-    // If this middleware is reached, the user is authenticated
-    // req.user is populated by Passport's deserializeUser
     res.status(200).json({ isAuthenticated: true, user: req.user.username });
 });
 

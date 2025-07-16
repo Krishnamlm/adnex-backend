@@ -136,12 +136,18 @@ exports.verifyOtp = async (req, res) => {
     }
 };
 
-// ----------------------- LOGIN -----------------------
-exports.login = async (req, res) => {
+// ----------------------- LOGIN (THIS FUNCTION IS NOW OPTIONAL OR CAN BE REMOVED) -----------------------
+// If the logic for successful login is handled directly in authRoutes.js,
+// this function might not be called for local strategy logins.
+// It will still be called if you use it elsewhere (e.g., for Google login success, if not handled in routes directly).
+exports.login = async (req, res, next) => { // Added 'next'
     try {
+        // If this function is called, it means Passport has successfully authenticated the user.
+        // The session should already be established by Passport.
+
         if (!req.user.isVerified) {
             req.logout((err) => {
-                if (err) { console.error('Logout error during unverified login:', err); }
+                if (err) { console.error('Logout error during unverified login:', err); return next(err); } // Pass error to next
                 req.session.email = req.user.email;
                 return res.redirect(`${FRONTEND_URL}/verify-otp.html?error=not_verified`);
             });
@@ -199,4 +205,81 @@ exports.login = async (req, res) => {
         console.error('Login error:', err);
         return res.redirect(`${FRONTEND_URL}/login.html?login=error`);
     }
+};
+
+// ----------------------- RESEND OTP -----------------------
+exports.resendOtp = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        if (user.isVerified) {
+            return res.status(400).json({ message: 'Account already verified.' });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save();
+
+        await sendOTP(email, otp);
+        res.status(200).json({ message: 'New OTP sent successfully.' });
+    } catch (err) {
+        console.error('Resend OTP error:', err);
+        res.status(500).json({ message: 'Error sending OTP.' });
+    }
+};
+
+// ----------------------- FORGOT PASSWORD - Request OTP -----------------------
+exports.forgotPasswordRequestOtp = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save();
+
+        await sendOTP(email, otp); // Reuse sendOTP function
+        res.status(200).json({ message: 'OTP sent to your email for password reset.' });
+    } catch (err) {
+        console.error('Forgot password OTP request error:', err);
+        res.status(500).json({ message: 'Error sending OTP for password reset.' });
+    }
+};
+
+// ----------------------- FORGOT PASSWORD - Reset Password -----------------------
+exports.forgotPasswordReset = async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        if (user.otp !== otp || user.otpExpires < new Date()) {
+            return res.status(400).json({ message: 'Invalid or expired OTP.' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.otp = undefined;
+        user.otpExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ message: 'Password has been reset successfully.' });
+    } catch (err) {
+        console.error('Password reset error:', err);
+        res.status(500).json({ message: 'Error resetting password.' });
+    }
 };

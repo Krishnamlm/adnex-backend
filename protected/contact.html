@@ -1,0 +1,661 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="Description" content="Enter your description here"/>
+<title>AdNex Technologies</title>
+
+<!-- FAVICON -->
+<link rel="icon" type="image/png" href="images/favicon.png">
+
+<!-- Bootstrap 5 CDN Links -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Owl Carousel CSS Links-->
+<link rel="stylesheet" href="css/owl/owl.carousel.min.css">
+<link rel="stylesheet" href="css/owl/owl.theme.min.css">
+
+<!-- Custom File's Link -->
+<link rel="stylesheet" href="css/extra.css">
+<link rel="stylesheet" href="css/internship-form.css">
+
+
+
+<!--footer-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                                <style>@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+
+/* General Body Styling (for dark theme effect) */
+    body {
+        background-color: #1a1a2e; /* Dark background for the whole page */
+        font-family: 'Arial', sans-serif;
+        color: #e0e0e0; /* Light text color */
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Contact Section Styling */
+    .contact-with-animation {
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #1f4068, #162447); /* Gradient dark background */
+        color: #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Ensure it takes full viewport height */
+    }
+
+    .contact-form-container {
+        background-color: #2c394b; /* Slightly lighter dark background for the form */
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+        max-width: 800px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .contact-form-container:hover {
+        transform: translateY(-5px); /* Subtle lift on hover */
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7); /* Enhanced shadow on hover */
+    }
+
+    /* Header Styling */
+    .contact-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-top: 0; /* Remove original padding-top */
+    }
+
+    .contact-header h1 {
+        font-size: 2.8em;
+        color: #e0e0e0;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+
+    .contact-header .highlight {
+        color: #00bcd4; /* A vibrant teal for highlights */
+        font-weight: bold;
+        padding: 0 8px; /* Adjust padding as needed */
+        border-radius: 5px;
+        background-color: rgba(0, 188, 212, 0.1); /* Subtle background for highlight */
+        transition: background-color 0.3s ease;
+    }
+
+    .contact-header .highlight:hover {
+        background-color: rgba(0, 188, 212, 0.25);
+    }
+
+    .contact-header p {
+        font-size: 1.2em;
+        color: #b0b0b0;
+        margin-top: 10px;
+    }
+
+    /* Form Group Styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+        color: #c0c0c0;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"],
+    .form-group textarea {
+        width: 100%;
+        padding: 14px 18px;
+        border: 1px solid #445c7b; /* Darker border */
+        border-radius: 8px;
+        background-color: #394867; /* Darker input background */
+        color: #e0e0e0;
+        font-size: 1em;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #909090;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #00bcd4; /* Highlight on focus */
+        box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.3);
+        outline: none;
+    }
+
+    /* Services Required Section */
+    .services-required {
+        margin-bottom: 30px;
+    }
+
+    .services-required h3 {
+        font-size: 1.3em;
+        color: #e0e0e0;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .service-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .service-btn {
+        background-color: #445c7b; /* Dark blue button */
+        color: #e0e0e0;
+        border: 1px solid #445c7b;
+        padding: 10px 18px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.95em;
+        transition: all 0.3s ease;
+        flex-grow: 1; /* Allow buttons to grow */
+        max-width: 180px; /* Limit max width for better wrapping */
+        text-align: center;
+    }
+
+    .service-btn:hover {
+        background-color: #00bcd4; /* Vibrant teal on hover */
+        border-color: #00bcd4;
+        color: #1a1a2e; /* Dark text on hover */
+        transform: translateY(-2px); /* Lift effect */
+        box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4);
+    }
+
+    .service-btn.selected {
+        background-color: #00bcd4; /* Selected state */
+        border-color: #00bcd4;
+        color: #1a1a2e;
+        box-shadow: 0 4px 12px rgba(0, 188, 212, 0.5);
+    }
+
+    .service-btn.others-btn {
+        background-color: #e67e22; /* Orange for "Others" */
+        border-color: #e67e22;
+        color: #fff;
+    }
+
+    .service-btn.others-btn:hover {
+        background-color: #f39c12; /* Lighter orange on hover */
+        border-color: #f39c12;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 15px 25px;
+        background-color: #00bcd4; /* Vibrant teal for submit */
+        color: #1a1a2e;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.3em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 30px;
+        transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        letter-spacing: 0.5px;
+    }
+
+    .submit-btn:hover {
+        background-color: #0097a7; /* Slightly darker teal on hover */
+        transform: translateY(-3px); /* Lift effect */
+        box-shadow: 0 8px 20px rgba(0, 188, 212, 0.6);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .contact-form-container {
+            padding: 30px 20px;
+            margin: 20px;
+        }
+
+        .contact-header h1 {
+            font-size: 2em;
+        }
+
+        .contact-header p {
+            font-size: 1em;
+        }
+
+        .service-btn {
+            flex-grow: unset; /* Revert flex-grow on smaller screens */
+            width: calc(50% - 10px); /* Two columns */
+            max-width: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .contact-form-container {
+            padding: 25px 15px;
+        }
+
+        .contact-header h1 {
+            font-size: 1.6em;
+        }
+
+        .service-btn {
+            width: 100%; /* Single column on very small screens */
+        }
+    }
+
+
+
+</style>
+</head>
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="85">
+
+    <!-- Navbar section -->
+    <header class="header_wrapper">
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo-new.png" class="img-fluid" alt="logo">
+            </a>
+            <button class="navbar-toggler pe-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon d-none"></span> <img src="images/icons8-menu.gif" alt="Menu" class="custom-toggler-icon"> </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav menu-navbar-nav"> <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">HOME</a> </li>
+                    <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            SOLUTIONS <span class="sub-arrow"></span>
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown" aria-labelledby="servicesDropdown"> <li style="--i: 1"><a class="dropdown-item" href="graphic.html">GRAPHIC DESIGNING SERVICES</a></li>
+                            <li style="--i: 2"><a class="dropdown-item" href="development.html">CUSTOM SOFTWARE, WEB & MOBILE DEVELOPMENT</a></li>
+                            <li style="--i: 3"><a class="dropdown-item" href="digital.html">DIGITAL MARKETING & PERFORMANCE CAMPAIGNS</a></li>
+                            <li style="--i: 4"><a class="dropdown-item" href="graphic.html">SOCIAL MEDIA MARKETING AGENCY</a></li>
+                            <li style="--i: 5"><a class="dropdown-item" href="graphic.html">ORGANIC SEO SERVICES</a></li>
+                            <li style="--i: 6"><a class="dropdown-item" href="graphic.html">VIDEO PRODUCTION (SOCIAL MEDIA OR AD FILMS)</a></li>
+                            <li style="--i: 7"><a class="dropdown-item" href="graphic.html">WEB HOSTING SEVICES</a></li>
+                            <li style="--i: 8"><a class="dropdown-item" href="graphic.html">PAYMENT GATEWAY SERVICES</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">WHO WE ARE</a>
+                    </li>                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="#brands">WORK</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="extra.html">INTERNSHIP</a> </li>
+                         <li class="nav-item">
+                        <a class="nav-link" href="#reviews">CAREER</a>
+                    </li> 
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item text-center">
+                        <a class="nav-link learn-more-btn-header" href="thank-you.html"><i class="fa fa-rocket" aria-hidden="true"></i>Enquire Now</a> </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+    <!-- Navbar section exit -->
+
+    <section class="contact-with-animation dark-theme">
+    <div class="contact-form-container" data-aos="fade-up">
+        <div class="contact-header">
+            <h1>Ready to initiate your <span class="highlight">business’s next stage</span> of expansion?</h1>
+            <p>We would love to be your Growth Partner</p>
+        </div>
+
+        <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <div class="form-group">
+                <input type="text" id="name" name="name" required placeholder="Your Full Name">
+            </div>
+
+            <div class="form-group">
+                <input type="email" id="email" name="email" required placeholder="Your Email">
+            </div>
+
+            <div class="form-group">
+                <input type="tel" id="Phone" name="Phone" required placeholder="Phone Number">
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="city" name="city" required placeholder="Your City">
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="company" name="company" required placeholder="Your Company">
+            </div>
+
+            <div class="services-required">
+                <h3>Services Required</h3>
+                <div class="service-buttons">
+                    <button type="button" class="service-btn" data-service="Branding">Branding</button>
+                    <button type="button" class="service-btn" data-service="Logo Design">Logo Design</button>
+                    <button type="button" class="service-btn" data-service="Brand Identity">Brand Identity</button>
+                    <button type="button" class="service-btn" data-service="Rebranding">Rebranding</button>
+                    <button type="button" class="service-btn" data-service="Product Launch">Product Launch</button>
+                    <button type="button" class="service-btn" data-service="Store Launch">Store Launch</button>
+                    <button type="button" class="service-btn" data-service="PR">PR</button>
+                    <button type="button" class="service-btn" data-service="Photoshoot">Photoshoot</button>
+                    <button type="button" class="service-btn" data-service="Video Production">Video Production</button>
+                    <button type="button" class="service-btn" data-service="SEO">SEO</button>
+                    <button type="button" class="service-btn" data-service="Social Media">Social Media</button>
+                    <button type="button" class="service-btn" data-service="Performance Marketing">Performance Marketing</button>
+                    <button type="button" class="service-btn" data-service="Marketing Automation">Marketing Automation</button>
+                    <button type="button" class="service-btn" data-service="UI/UX">UI/UX</button>
+                    <button type="button" class="service-btn" data-service="Website">Website</button>
+                    <button type="button" class="service-btn" data-service="Influencer Marketing">Influencer Marketing</button>
+                    <button type="button" class="service-btn" data-service="Shopify Store">Shopify Store</button>
+                    <button type="button" class="service-btn" data-service="Mobile/Web app">Mobile/Web app</button>
+                    <button type="button" class="service-btn others-btn" data-service="Others">Others</button>
+                </div>
+                <input type="hidden" name="Selected Services" id="selectedServices">
+            </div>
+
+            <div class="form-group">
+                <label for="query">Tell us more about your query *</label>
+                <textarea id="query" name="query" rows="5" required placeholder="Briefly describe your project or needs"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Enquire Now</button>
+            <input type="hidden" name="access_key" value="6eca66aa-0d23-4277-b41f-093bb723791b">
+            <input type="hidden" name="redirect" value="https://02sl5q2q-5500.inc1.devtunnels.ms/thank-you.html">
+        </form>
+    </div>
+</section>
+
+ 
+    <!-- FAQs section exit -->
+
+    <!-- Footer section -->
+    <footer class="main-footer">
+        <div class="footer-container">
+
+            <div class="footer-section footer-about">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#00BCD4" stroke-width="1.5"/>
+                        <path d="M9 9L15 15M15 9L9 15" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>ADNEX TECHNOLOGIES</span>
+                </div>
+                <p>
+                    Adnex Technologies empowers businesses with cutting-edge digital experiences. We craft innovative web solutions, redefine user interfaces, and amplify your online presence through data-driven strategies.
+                </p>
+            </div>
+
+            <div class="footer-section footer-links">
+                <h3>Our Services</h3>
+                <ul>
+                    <li><a href="websites.html">Web Development</a></li>
+                    <li><a href="services.html">Software Development</a></li>
+                    <li><a href="#">Graphic Designing</a></li>
+                    <li><a href="#">UI/UX Designing</a></li>
+                    <li><a href="#">SEO & Content</a></li>
+                    
+                    
+                </ul>
+            </div>
+
+            <div class="footer-section footer-links">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section footer-contact">
+                <h3>Get In Touch</h3>
+                <p class="mail">
+                    Mail us: <a href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=CllgCJTKWVNMFvXGTxlhXDjmGstXkvKcLrJdXHvVZzKgjhXmNHSTHjpJKkmVlsBVxLnCfHSVRQB">info@adnextechnologies.in</a>
+                </p>
+                <p class="support">
+                    Support: <a href="mailto:krishnaphotoshop85@gmail.com">support@adnextechnologies.in</a>
+                </p>
+                <p class="Visit">
+                    Visit us: Gwalior , Madhya Pradesh, India
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 AdNex Technologies. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <!-- Footer section exit -->
+
+     
+ 
+
+
+<!-- jQuery CDN Link -->
+
+
+<!-- Bootstrap 5 JS CDN Links -->
+
+
+
+
+
+
+
+
+ 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+<!-- Owl Carousel JS Links-->
+<script src="js/owl/owl.carousel.min.js"></script>
+ 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- Custom Js Link -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/main.js"></script>
+
+<script>document.addEventListener('DOMContentLoaded', () => {
+    const animateOnScroll = (elements, threshold = 0.1) => {
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('anim-visible');
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, { threshold: threshold });
+
+        elements.forEach(el => {
+            observer.observe(el);
+        });
+    };
+
+    // Animate the section title and subtitle
+    const sectionTitle = document.querySelector('.section-title');
+    const sectionSubtitle = document.querySelector('.section-subtitle');
+    animateOnScroll([sectionTitle, sectionSubtitle], 0.5); // Animate when 50% visible
+
+    // Animate individual service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    animateOnScroll(serviceCards, 0.2); // Animate when 20% of card is visible
+});
+
+gsap.registerPlugin(ScrollTrigger);
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Entrance Animation for Services Section (Titles, Cards) ---
+    const servicesSection = document.querySelector('.services-section');
+    const servicesTitle = document.getElementById('services-title');
+    const servicesSubtitle = document.getElementById('services-subtitle');
+    const animatedLogoWrapper = document.getElementById('animated-logo-wrapper');
+    const serviceCards = gsap.utils.toArray('.service-card');
+
+    // Define the timeline for the services section entrance
+    const servicesTimeline = gsap.timeline({
+        paused: true,
+        scrollTrigger: {
+            trigger: servicesSection,
+            start: "top center+=150", // Adjusted start for smoother reveal
+            toggleActions: "play none none none",
+            // markers: true, // Uncomment for debugging ScrollTrigger
+        }
+    });
+
+    // Animate title and subtitle
+    servicesTimeline.fromTo(servicesTitle,
+        { opacity: 0, y: 40, autoAlpha: 0 }, // autoAlpha handles visibility and opacity
+        { opacity: 1, y: 0, duration: 1.2, ease: "power4.out", autoAlpha: 1 }
+    )
+    .fromTo(servicesSubtitle,
+        { opacity: 0, y: 40, autoAlpha: 0 },
+        { opacity: 1, y: 0, duration: 1.2, ease: "power4.out", autoAlpha: 1 }, "<0.4"
+    );
+
+    // Animate the logo (if present)
+    if (animatedLogoWrapper) {
+        servicesTimeline.fromTo(animatedLogoWrapper,
+            { opacity: 0, scale: 0.4, y: 80, autoAlpha: 0 },
+            { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "elastic.out(1, 0.7)", autoAlpha: 1 }, "<0.5"
+        );
+
+        const svgPath = animatedLogoWrapper.querySelector('path');
+        if (svgPath) {
+            // For a truly premium SVG animation, GSAP's DrawSVGPlugin is ideal.
+            // If you don't have it, consider animating stroke-dasharray/offset or simple scale/opacity.
+            // Here's an example using a stroke-based animation if your SVG has strokes.
+            // If not, it will be a simple scale/fade-in for the fill.
+            gsap.set(svgPath, { fill: "rgba(255,255,255,0)", stroke: "#fff", strokeWidth: 0 }); // Initial state
+            servicesTimeline.to(svgPath, {
+                duration: 1.8,
+                strokeWidth: 3,
+                fill: "#ffffff",
+                ease: "power2.out",
+                // If using DrawSVG: drawSVG: "0% 100%"
+            }, "<0.3");
+        }
+    }
+
+    // Stagger service cards animation
+    serviceCards.forEach(card => {
+        const delay = parseFloat(card.dataset.animationDelay || 0);
+        servicesTimeline.fromTo(card,
+            { opacity: 0, y: 60, scale: 0.85, autoAlpha: 0 },
+            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "back.out(1.2)", autoAlpha: 1,
+              onComplete: () => {
+                // Remove anim-hidden after animation to allow hover effects etc.
+                card.classList.remove('anim-hidden');
+                // Optional: Trigger icon animation only after card animates in
+                const icon = card.querySelector('[data-icon-anim]');
+                if (icon) {
+                    gsap.fromTo(icon,
+                        { opacity: 0, scale: 0.4, y: 30, rotate: -90, autoAlpha: 0 },
+                        { opacity: 1, scale: 1, y: 0, rotate: 0, duration: 0.8, ease: "elastic.out(1, 0.5)", autoAlpha: 1 }
+                    );
+                }
+              }
+            },
+            `<${delay}`
+        );
+    });
+
+    // --- Interactive Mouse Parallax for Service Cards ---
+    servicesSection.addEventListener('mousemove', (e) => {
+        const { clientX, clientY } = e;
+        const sectionRect = servicesSection.getBoundingClientRect();
+        const centerX = sectionRect.left + sectionRect.width / 2;
+        const centerY = sectionRect.top + sectionRect.height / 2;
+
+        const offsetX = (clientX - centerX) / sectionRect.width; // -0.5 to 0.5
+        const offsetY = (clientY - centerY) / sectionRect.height; // -0.5 to 0.5
+
+        serviceCards.forEach(card => {
+            const parallaxIntensity = 15; // Adjust this value
+            const rotateIntensity = 5; // Adjust this value for rotation
+
+            const cardX = -offsetX * parallaxIntensity;
+            const cardY = -offsetY * parallaxIntensity;
+            const cardRotateX = -offsetY * rotateIntensity;
+            const cardRotateY = offsetX * rotateIntensity;
+
+            gsap.to(card, {
+                x: cardX,
+                y: cardY,
+                rotateX: cardRotateX,
+                rotateY: cardRotateY,
+                duration: 0.8, // Smoothness of the parallax effect
+                ease: "power2.out",
+                overwrite: "auto" // Prevents stacking of animations
+            });
+        });
+    });
+
+    // Reset card position when mouse leaves the section
+    servicesSection.addEventListener('mouseleave', () => {
+        serviceCards.forEach(card => {
+            gsap.to(card, {
+                x: 0,
+                y: 0,
+                rotateX: 0,
+                rotateY: 0,
+                duration: 1,
+                ease: "elastic.out(1, 0.7)"
+            });
+        });
+    });
+
+    // --- Continuous Parallax for Background Blobs on Scroll ---
+    gsap.to(servicesSection.querySelectorAll('.services-section::before, .services-section::after, .animated-shape-1, .animated-shape-2'), {
+        yPercent: -10, // Move blobs up 10% of their height on scroll
+        xPercent: 5, // Move blobs right 5% of their width on scroll
+        ease: "none",
+        scrollTrigger: {
+            trigger: servicesSection,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            // markers: true,
+        }
+    });
+
+    // GSAP for text splitting (if desired, requires SplitText plugin which is Club GreenSock)
+    // If you want per-character/word animation, you would use SplitText.
+    // For free alternative, manually wrap characters/words in spans.
+
+});
+</script>
+
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+</script>
+
+</body>
+</html>
+

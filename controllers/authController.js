@@ -6,8 +6,8 @@ const { sendEmail } = require('../utils/sendEmail');
 
 // Define your frontend and backend URLs here
 // IMPORTANT: Make sure these are set as environment variables on Render!
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'; // Your deployed Render frontend URL
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000'; // Your deployed Render backend URL
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://adnex-frontend-ui2a.onrender.com'; // Your deployed Render frontend URL
+const BACKEND_URL = process.env.BACKEND_URL || 'https://adnex-backend.onrender.com'; // Your deployed Render backend URL
 
 // Create a transporter for nodemailer
 const transporter = nodemailer.createTransport({

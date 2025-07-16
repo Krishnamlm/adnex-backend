@@ -43,17 +43,22 @@ app.use(express.static('public'));
 
 // --- Routes ---
 // Use authRoutes for all /auth paths (e.g., /auth/login, /auth/register, /auth/google)
+// --- Routes ---
+// Use authRoutes for all /auth paths (e.g., /auth/login, /auth/register, /auth/google)
 app.use('/auth', authRoutes);
 
-
-
-
-// Route for successful authentication, serving the main index page
-app.get('/auth/login',(req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'contact.html'));
+// Corrected GET /auth/login route: Redirect to frontend's login page
+app.get('/auth/login', (req, res) => {
+    // Make sure FRONTEND_URL is accessible here.
+    // It should be defined via process.env in a dotenv setup, which you have.
+    // You might want to define FRONTEND_URL as a constant at the top of server.js
+    // or ensure it's loaded via process.env before this line.
+    res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
 });
+
+// Route for successful authentication, serving the main index page (assuming this is backend's protected area)
 app.get('/auth/success', isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // This assumes index.html is indeed in backend's public
 });
 
 

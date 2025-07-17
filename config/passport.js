@@ -1,7 +1,7 @@
 // Inside config/passport.js
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const GoogleStrategy = require('passport-google-oauth20').Strategy; // If not already there
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
 const User = require('../models/User'); // Assuming your User model is here
 
@@ -50,38 +50,58 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-// Google Strategy (if you have one, ensure it also considers `isVerified`)
+// Google Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    // CRITICAL FIX: Use the full HTTPS URL for the callback
+    callbackURL: "https://adnex-backend.onrender.com/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
+      // 1. Try to find user by Google ID
       let user = await User.findOne({ googleId: profile.id });
 
       if (user) {
-        // If user exists, but is not verified (e.g., first login via Google, but didn't complete email OTP)
-        // You might want to handle this differently, e.g., prompt for email verification after Google login.
-        // For simplicity, we'll just allow direct login if the Google account is already linked.
-        // If you *really* want to force email OTP even for Google users, you'd need a more complex flow.
-        // For now, we'll assume Google login inherently "verifies" the user because Google itself verifies email.
-        user.isVerified = true; // Mark as verified if logging in via Google
-        await user.save();
-        done(null, user);
-      } else {
-        // Create new user for Google login
-        user = new User({
-          googleId: profile.id,
-          username: profile.displayName,
-          email: profile.emails[0].value,
-          isVerified: true // Google users are considered verified by default (their email is verified by Google)
-        });
-        await user.save();
-        done(null, user);
+        // If user found by Google ID, ensure they are marked as verified if logging in via Google
+        if (!user.isVerified) {
+            user.isVerified = true;
+            await user.save();
+        }
+        return done(null, user);
       }
+
+      // 2. If no user found by Google ID, try to find by email
+      user = await User.findOne({ email: profile.emails[0].value });
+
+      if (user) {
+        // If user found by email, it means an account already exists.
+        // Link this existing account to the Google ID.
+        user.googleId = profile.id; // Link Google ID
+        if (!user.isVerified) {
+            user.isVerified = true; // Mark as verified if logging in via Google
+        }
+        await user.save();
+        return done(null, user);
+      }
+
+      // 3. If no user found by Google ID OR email, create a new user
+      user = new User({
+        googleId: profile.id,
+        username: profile.displayName,
+        email: profile.emails[0].value,
+        isVerified: true // Google users are considered verified by default (their email is verified by Google)
+      });
+      await user.save();
+      return done(null, user);
+
     } catch (err) {
-      done(err, null);
+      // It's important to handle errors gracefully here.
+      // If a duplicate key error occurs during 'user.save()' when creating a new user,
+      // it means the email already exists and the above logic missed it, or there's a race condition.
+      // Passport's done(err, null) will pass the error to the next middleware.
+      console.error("Error in Google Strategy callback:", err);
+      return done(err, null);
     }
   }
 ));

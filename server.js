@@ -10,74 +10,67 @@ const morgan = require('morgan');
 const colors = require('colors');
 require('dotenv').config();
 
-// --- 1. NEW: Import connect-mongo for persistent sessions ---
-const MongoStore = require('connect-mongo'); // <--- ADD THIS LINE
+const MongoStore = require('connect-mongo');
 
-// Import routes and middleware
 const authRoutes = require('./routes/authRoutes');
-const isAuthenticated = require('./middleware/isAuthenticated'); // Ensure this file also redirects to FRONTEND_URL
+const isAuthenticated = require('./middleware/isAuthenticated');
 require('./config/passport');
 
 const app = express();
 
-// --- MongoDB Connection (Moved to top for clarity and early error catching) ---
+// --- CRITICAL FIX: Tell Express to trust the proxy (Render) ---
+app.set('trust proxy', 1); // Or 'true' if you expect multiple layers of proxies
+
+// --- MongoDB Connection ---
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log(colors.yellow('MongoDB connected successfully')))
     .catch(err => console.error(colors.red('MongoDB connection error:', err)));
 
-
 // --- Core Middleware ---
 app.use(cors({
-    origin: process.env.FRONTEND_URL, // Use process.env.FRONTEND_URL for consistency
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true // Crucial for sending/receiving cookies cross-origin
+    credentials: true
 }));
-app.use(morgan('dev')); // HTTP request logger middleware
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies (for form submissions)
-app.use(express.json()); // Parse JSON bodies
+app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// --- Session Setup (MUST come before Passport middleware) ---
+// --- Session Setup ---
 app.use(session({
-    secret: process.env.SESSION_SECRET, // Use a strong secret from .env
-    resave: false, // Don't save session if unmodified
-    saveUninitialized: false, // Don't create session until something stored
-    
-    // --- 2. CRITICAL FIX: Use connect-mongo as the session store ---
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
-        collectionName: 'sessions', // Optional: specify collection name
-        ttl: 14 * 24 * 60 * 60, // Session TTL in seconds (e.g., 14 days), matches cookie maxAge below
+        collectionName: 'sessions',
+        ttl: 14 * 24 * 60 * 60,
         autoRemove: 'interval',
-        autoRemoveInterval: 10 // In minutes. To clean expired sessions
+        autoRemoveInterval: 10
     }),
-    
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // true if HTTPS, false for HTTP (localhost)
-        maxAge: 1000 * 60 * 60 * 24 * 14, // *** INCREASED: 14 days (consistent with store TTL) ***
-        httpOnly: true, // Prevent client-side JS from accessing the cookie
-        
-        // --- 3. CRITICAL FIX: 'none' for production cross-site cookies ---
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' 
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     }
 }));
 
-// --- Passport Middleware (MUST come after session middleware) ---
+// --- Passport Middleware ---
 app.use(passport.initialize());
-app.use(passport.session()); // This enables Passport to use sessions
+app.use(passport.session());
 
-// --- Static Files (Serve files from 'public' directory of the backend, if any) ---
-// Removed redundant second app.use(express.static('public'));
+// --- Static Files ---
 app.use(express.static('public'));
 
 // --- Routes ---
 app.use('/auth', authRoutes);
 
-// Corrected GET /auth/login route: Redirect to frontend's login page
 app.get('/auth/login', (req, res) => {
     res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
 });
 
-// Protected routes - these will use the isAuthenticated middleware
+// Protected routes
 app.get('/contact', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, 'protected', 'contact.html'));
 });
@@ -107,5 +100,4 @@ app.get('/auth/status', isAuthenticated, (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(colors.green(`Server started on port ${port}`));
-    // Removed redundant MongoDB connected message here as it's logged in the .then() block
 });

@@ -1,0 +1,548 @@
+/* TABLE OF CONTENTS */
+/* ------------------
+1. General
+2. Navbar
+3. Banner
+4. Client
+5. About 
+6. Features
+7. Pricing 
+8. Testimonials
+9. Brands
+10. FAQs 
+11. Footer
+-------------------- */
+
+
+
+/* 1 General */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+* body{
+    box-sizing: border-box;
+    margin: 0;
+    padding:0;
+}
+:root{
+    /* Background Color */
+    --bg-black:#090b3c;
+    --bg-white:#fff;
+    --bg-light-white:#fcfcfc;
+    --bg-light-2:#f2f7fa;
+    --bg-dark-green:#0e9d80;
+    --bg-features-1:#fff6d6;
+    --bg-features-2:#ebdcf9;
+    --bg-features-3:#ddf5fc;
+    --bg-features-4:#dcf6e8;
+    --bg-features-5:#f8e4e1;
+    --bg-features-6:#fbffd4;
+
+    /* Text Color */
+    --text-black:#000;
+    --text-white:#fff;
+    --text-dark-gray:#4c535d; 
+    --text-light-2:#798089;
+    --text-light-3:#5e5e72;
+    --text-light-4:#A0A0A0;
+    --text-dark-green:#12c4a0;
+    --text-orange:#ff5d2a;
+    --text-yellow:#ffc100;
+
+    /* Fonts */
+    --primary-font: Quicksand;
+    --secondary-font: 'Poppins', sans-serif;
+    --normal-font-weight:400;
+    --bold-font-weight:700;
+}
+body{
+    font-family:var(--primary-font);
+    
+    font-weight: var(--normal-font-weight);
+    background-color: #050B1B; 
+}
+html,body{
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/*
+=========================================
+    Custom Scrollbar
+=========================================
+*/ 
+
+::-webkit-scrollbar {
+    width: 0.625rem;
+    
+  } 
+  ::-webkit-scrollbar-track {
+    background: var(--white-color); 
+    
+  } 
+  ::-webkit-scrollbar-thumb {
+    background:var(--bg-dark-green); 
+    
+  }
+
+/* Custom CSS */
+/* --- HEADER / NAVBAR STYLING --- */
+
+.header_wrapper {
+    position: relative;
+    z-index: 999; /* Ensure header is on top */
+}
+
+.header_wrapper .navbar {
+    padding: 1rem 0;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -ms-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+
+    /* Glassmorphism background for the navbar */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(15px) saturate(1.5);
+    -webkit-backdrop-filter: blur(15px) saturate(1.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Subtle dark shadow */
+}
+
+.header_wrapper .navbar-brand img {
+    max-width: 140px;
+    height: auto;
+    filter: drop-shadow(0 0 5px rgba(102, 204, 255, 0.5)); /* Subtle glow on logo */
+    transition: all 0.3s ease-in-out;
+}
+
+.header_wrapper .navbar-brand img:hover {
+    filter: drop-shadow(0 0 15px rgba(102, 204, 255, 0.9)); /* Brighter glow on hover */
+}
+
+/* Navbar Toggler - Custom GIF */
+.header_wrapper .navbar-toggler {
+    border: none; /* Remove default border */
+    outline: none;
+    padding: 0;
+}
+
+.header_wrapper .navbar-toggler .custom-toggler-icon {
+    width: 35px; /* Adjust size of GIF */
+    height: 35px;
+    object-fit: contain;
+    filter: brightness(1.2) drop-shadow(0 0 5px rgba(102, 204, 255, 0.7)); /* Glow on menu icon */
+    transition: filter 0.3s ease-in-out;
+}
+
+.header_wrapper .navbar-toggler:focus {
+    box-shadow: none; /* Remove focus outline */
+}
+
+/* Navbar Links */
+.header_wrapper .navbar-nav .nav-link {
+    font-size: 1.05em;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9); /* Lighter text color */
+    padding: 0.8rem 1.2rem; /* Adjusted padding */
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    transition: all 0.3s ease-in-out;
+}
+
+.header_wrapper .navbar-nav .nav-link:hover
+ {
+    color: #66CCFF; /* Primary blue on hover/active */
+    text-shadow: 0 0 10px rgba(102, 204, 255, 0.8); /* Glowing effect */
+}
+
+.header_wrapper .navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0.3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #66CCFF, #92b8ff);
+    transition: width 0.3s ease-in-out;
+}
+
+.header_wrapper .navbar-nav .nav-link:hover::after,
+.header_wrapper .navbar-nav .nav-link.active::after {
+    width: calc(100% - 2.4rem); /* Match padding width */
+}
+
+/* Navbar Dropdown */
+.header_wrapper .navbar-nav .dropdown-menu {
+    /* Glassmorphism for dropdown */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.3);
+    min-width: 250px;
+    padding: 10px 15px;
+    margin-top: 10px;
+}
+
+.header_wrapper .navbar-nav .dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    font-size: 0.95em;
+    white-space: normal; /* Allow long text to wrap */
+    transition: all 0.3s ease-in-out;
+    background-color: transparent; /* Override default bootstrap background */
+    border-radius: 5px; /* Slight round for items */
+    margin: 0 5px; /* Spacing between items */
+
+    /* Staggered animation for dropdown items (using --i variable) */
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: dropdownItemFadeIn 0.5s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.08s); /* Staggered delay */
+}
+
+@keyframes dropdownItemFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+.header_wrapper .navbar-nav .dropdown-toggle::after {
+    display: none; /* Hide default dropdown arrow */
+}
+
+/* Remove focus outline from navigation links and dropdown toggles */
+.nav-link:focus,
+.nav-link.dropdown-toggle:focus {
+    outline: none !important; /* Removes the default browser outline */
+    box-shadow: none !important; /* Removes any box-shadow Bootstrap might add on focus */
+}
+
+/* Optional: If you want to explicitly remove focus outline from dropdown items as well */
+.dropdown-item:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.header_wrapper .navbar-nav .sub-arrow {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(255, 255, 255, 0.8); /* Custom arrow */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Rotate custom arrow on dropdown active */
+.header_wrapper .navbar-nav .dropdown-toggle[aria-expanded="true"] .sub-arrow {
+    transform: rotate(180deg);
+}
+
+/* "Enquire Now" Button in Header */
+.learn-more-btn-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    padding: 10px 25px; /* Smaller padding than main CTA */
+    border-radius: 30px;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+
+    background: linear-gradient(90deg, rgba(102, 204, 255, 0.3), rgba(146, 184, 255, 0.3)) !important;
+    border: 2px solid #66CCFF;
+    color: #fff !important; /* Ensure color overrides nav-link */
+    box-shadow: 0 0 10px rgba(102, 204, 255, 0.5);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    margin-left: 20px; /* Space from last nav item */
+}
+
+.learn-more-btn-header i {
+    color: #FFD700; /* Gold rocket icon */
+    transition: all 0.4s ease;
+}
+
+.learn-more-btn-header:hover {
+    background: linear-gradient(90deg, rgba(102, 204, 255, 0.6), rgba(146, 184, 255, 0.6));
+    border-color: #92b8ff;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(102, 204, 255, 0.9), 0 0 30px rgba(146, 184, 255, 0.7);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.learn-more-btn-header:hover i {
+    transform: translateX(3px);
+}
+
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+    display: none;
+  } 
+
+    .header_wrapper .navbar-nav {
+        margin-right: 0 !important; /* Reset margin on mobile */
+        margin-top: 20px; /* Space between menu items and toggle button */
+    }
+        .header_wrapper .navbar-collapse {
+        background: linear-gradient(135deg, rgba(19, 0, 63, 0.932), rgba(0, 3, 10, 0.845)); /* Darker background for collapsed menu */
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 0;
+        
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .header_wrapper .navbar-nav .dropdown-menu {
+        margin-top: 0;
+        border-radius: 100;
+        background: linear-gradient(135deg, rgba(11, 22, 48, 0.1), rgba(5, 11, 27, 0.1)); /* Darker for dropdown */
+        border: none;
+        box-shadow: none;
+        margin-right: 8px;
+
+    }
+    .header_wrapper .navbar-nav .nav-link {
+        padding: 0.6rem 1rem;
+        text-align: center;
+    }
+    .header_wrapper .navbar-nav .nav-link::after {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%; /* Smaller underline for mobile */
+    }
+    .header_wrapper .navbar-nav .nav-link:hover::after,
+    .header_wrapper .navbar-nav .nav-link.active::after {
+        width: 80%; /* Expand on hover */
+    }
+
+    .header_wrapper .navbar-nav .dropdown-item {
+        text-align: center;
+        padding: 8px 15px;
+        font-size: 10px;
+        
+        
+    }
+    .learn-more-btn-header {
+        margin-left: 0;
+        margin-top: 20px;
+        width: fit-content;
+        display: block; /* Make it block to center */
+        margin: 20px auto 0; /* Center button */
+    }
+        .header_wrapper .navbar-nav .dropdown-item:hover {
+    margin-left: 0px;
+    margin-right: 50px;
+}
+.dropdown-menu .dropdown-item:hover {
+    background-image: linear-gradient(to right, rgb(2, 31, 95), rgb(2, 81, 97)); /* Background color on hover */
+    color: #ffffff; /* Optional: Change text color on hover */
+    
+}
+
+.justify-content-end {
+    justify-content: flex-end !important;
+}
+
+}
+
+@media (max-width: 480px) {
+    .header_wrapper .navbar-brand img {
+        max-width: 150px;
+    }
+       ::-webkit-scrollbar {
+    display: none;
+  } 
+    .header_wrapper .navbar-toggler .custom-toggler-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .header_wrapper .navbar-nav .nav-link {
+        font-size: 0.9em;
+    }
+
+    .learn-more-btn-header {
+        font-size: 0.85em;
+        padding: 8px 20px;
+    }
+
+    .header_wrapper .navbar-nav {
+       padding-left:0px;
+    }
+
+    .header_wrapper .navbar-nav .dropdown-item:hover {
+    margin-left: 0px;
+    margin-right: 50px;
+}
+.dropdown-menu .dropdown-item:hover {
+    background-image: linear-gradient(to right, rgb(2, 31, 95), rgb(2, 81, 97)); /* Background color on hover */
+    color: #ffffff; /* Optional: Change text color on hover */
+    
+}
+
+     
+}
+
+
+.custom-dropdown {
+  width: 91vw;
+  max-width: 500px;
+  padding: 12px 16px;
+  font-size: 14px;
+  background-color: rgba(200, 243, 255, 0.6); /* semi-transparent sky blue */
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  backdrop-filter: blur(12px);   /* ✨ blur effect */
+  -webkit-backdrop-filter: blur(12px); /* for Safari */
+  animation: dropdownFadeIn 0.6s ease forwards;
+  transform-origin: top;
+  overflow: hidden;
+}
+
+
+/* Animate dropdown appearance */
+@keyframes dropdownFadeIn {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.6) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1) translateY(0);
+  }
+}
+
+.custom-dropdown .dropdown-item {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInItem 0.4s forwards;
+  animation-delay: calc(var(--i) * 0.1s);
+  transition: background-color 0.3s, transform 0.3s;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+@keyframes slideInItem {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Hover effect */
+
+
+.custom-dropdown .dropdown-item span {
+  white-space: normal;
+}
+
+
+* --- Banner Section Styling --- */
+.banner_wrapper {
+    position: relative;
+   
+    padding: 15px 0; /* More padding for spacious feel */
+    min-height: 100vh; /* Ensure it takes full viewport height */
+    display: flex; /* Use flexbox for vertical centering if needed */
+    align-items: center; /* Center content vertically */
+    overflow: hidden; /* Crucial to contain background animations */
+    background: radial-gradient(circle at top left, #08102A, #050B1B 80%); /* Subtle radial gradient */
+    z-index: 1; /* Ensure banner content is above global backgrounds */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05); /* Subtle bottom separator */
+    box-shadow: inset 0 -20px 50px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+}
+
+/* Background Animated Blobs */
+.banner-bg-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(150px); /* Heavy blur for soft glow */
+    opacity: 0.6;
+    z-index: 0; /* Behind content */
+    animation: blobMove 30s infinite alternate ease-in-out;
+}
+
+.blob-1 {
+    background: linear-gradient(135deg, #2b04c6, #2af3fe) !important; /* Warm, energetic */
+    width: 600px;
+    height: 600px;
+    top: -100px;
+    left: -200px;
+    animation-delay: 0s;
+}
+
+.blob-2 {
+    background: linear-gradient(135deg, #3402be, #66029c) !important; /* Cool, techy */
+    width: 700px;
+    height: 700px;
+    bottom: -150px;
+    right: -250px;
+    animation-delay: 5s;
+}
+
+@keyframes blobMove {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    25% { transform: translate(50px, -70px) scale(1.05); opacity: 0.7; }
+    50% { transform: translate(-80px, 90px) scale(0.95); opacity: 0.5; }
+    75% { transform: translate(100px, -40px) scale(1.1); opacity: 0.75; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+}
+
+/* Subtle Gradient Overlay Animation */
+.banner-bg-gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.03), transparent 30%, transparent 70%, rgba(255, 255, 255, 0.03));
+    opacity: 0.5;
+    z-index: 0;
+    animation: gradientShift 40s infinite linear;
+    pointer-events: none; /* Allows clicks through */
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* Particle System (CSS-only for simplicity, JS for more complex) */
+
+
+/* Mobile adjustments *//* TABLE OF CONTENTS */
+/* ------------------
+1. General
+2. Navbar
+3. Banner
+4. Client
+5. About 
+6. Features
+7. Pricing 
+8. Testimonials
+9. Brands
+10. FAQs 
+11. Footer
+-------------------- */
+
+
+
+

@@ -1,0 +1,263 @@
+/* --- TECHNOLOGY SECTION STYLING --- */
+.technology-section {
+    position: relative;
+    padding: 100px 0; /* Ample vertical padding */
+    background: #0B1630; /* Solid dark background by default */
+    overflow: hidden; /* Hide overflowing elements, especially for animations */
+    z-index: 1; /* Ensure content is above potential background effects */
+}
+
+/* Optional: Add a subtle animated background to the technology section as well
+   This uses similar concepts to your banner's advanced background, but simplified
+*/
+.technology-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        /* Subtle glowing dots / particles */
+        radial-gradient(circle at top left, rgba(102, 204, 255, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at bottom right, rgba(146, 184, 255, 0.05) 0%, transparent 40%),
+        /* Very subtle grid lines */
+        repeating-linear-gradient(90deg, rgba(102, 204, 255, 0.01) 0, rgba(102, 204, 255, 0.01) 1px, transparent 1px, transparent 30px),
+        repeating-linear-gradient(0deg, rgba(102, 204, 255, 0.01) 0, rgba(102, 204, 255, 0.01) 1px, transparent 1px, transparent 30px);
+    background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+    opacity: 0.8;
+    z-index: -1; /* Keep it behind content */
+    animation: techBgPan 60s linear infinite; /* Example animation for background */
+}
+
+@keyframes techBgPan {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+
+.technology-section .container {
+    position: relative;
+    z-index: 2; /* Ensure content is above the pseudo-element background */
+}
+
+.technology-content {
+    display: flex;
+    flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+    align-items: center; /* Vertically align items in the middle */
+    justify-content: center; /* Center content horizontally */
+    gap: 40px; /* Space between columns */
+}
+
+.technology-content .text-column {
+    flex: 1; /* Allow text column to grow */
+    min-width: 300px; /* Minimum width before wrapping */
+    max-width: 550px; /* Max width for readability */
+    text-align: left; /* Text alignment within its column */
+    color: #fff;
+}
+
+.technology-content .text-column h1 {
+    font-size: 3.5em;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: #66CCFF; /* Accent color for main heading */
+    text-shadow: 0 0 20px rgba(102, 204, 255, 0.6); /* Subtle glow */
+}
+
+.technology-content .text-column .subheadline {
+    font-size: 1.3em;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    color: #92b8ff; /* Softer accent for subheadline */
+}
+
+.technology-content .text-column p {
+    font-size: 1.1em;
+    line-height: 1.7;
+    margin-bottom: 35px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.technology-content .enquire-button {
+    display: inline-block;
+    background: linear-gradient(to right, #66CCFF, #8A2BE2); /* Gradient background */
+    color: #fff; /* White text */
+    padding: 15px 35px;
+    border-radius: 50px; /* Pill-shaped button */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1em;
+    letter-spacing: 0.05em;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 20px rgba(102, 204, 255, 0.4); /* Initial shadow with glow */
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.technology-content .enquire-button:hover {
+    transform: translateY(-5px); /* Lift effect */
+    box-shadow: 0 12px 25px rgba(102, 204, 255, 0.6), 0 0 30px rgba(102, 204, 255, 0.8); /* Enhanced glow on hover */
+    background: linear-gradient(to right, #8A2BE2, #66CCFF); /* Reverse gradient on hover */
+}
+
+/* Hover background ripple effect (Advanced) */
+.technology-content .enquire-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: width 0.6s ease, height 0.6s ease, transform 0.6s ease, opacity 0.6s ease;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    z-index: -1;
+}
+
+.technology-content .enquire-button:hover::before {
+    width: 200%;
+    height: 200%;
+    opacity: 1;
+}
+
+
+.technology-content .image-column {
+    flex: 1; /* Allow image column to grow */
+    min-width: 300px; /* Minimum width before wrapping */
+    display: flex;
+    justify-content: center; /* Center the phone mockup horizontally */
+    align-items: center; /* Vertically align */
+}
+
+.technology-content .phone-mockup {
+    position: relative;
+    width: 100%;
+    max-width: 450px; /* Max width of the phone mockup container */
+    padding: 20px; /* Add some padding to simulate depth/background for glow */
+    border-radius: 20px;
+    /* Optional: Subtle transparent background to make the glow appear better */
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 0 50px rgba(102, 204, 255, 0.3), 0 0 100px rgba(146, 184, 255, 0.1); /* Initial glow */
+    animation: phoneMockupGlow 10s infinite alternate ease-in-out; /* Pulsing glow animation */
+}
+
+.technology-content .phone-mockup img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 20px rgba(102, 204, 255, 0.5)); /* Stronger glow on the image itself */
+    animation: phoneImageFloat 12s infinite alternate ease-in-out; /* Subtle floating */
+}
+
+@keyframes phoneMockupGlow {
+    0%, 100% { box-shadow: 0 0 50px rgba(102, 204, 255, 0.3), 0 0 100px rgba(146, 184, 255, 0.1); }
+    50% { box-shadow: 0 0 65px rgba(102, 204, 255, 0.5), 0 0 120px rgba(146, 184, 255, 0.2); }
+}
+
+@keyframes phoneImageFloat {
+    0% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-8px) rotate(0.5deg); }
+    66% { transform: translateY(8px) rotate(-0.5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* --- RESPONSIVE ADJUSTMENTS for Technology Section --- */
+@media (max-width: 991px) { /* Tablet and smaller */
+    .technology-section {
+        padding: 80px 0;
+    }
+    .technology-content {
+        flex-direction: column; /* Stack columns vertically */
+        text-align: center; /* Center text column content */
+    }
+    .technology-content .text-column {
+        order: 2; /* Text below image on mobile */
+        max-width: 700px; /* Allow wider text column on tablets */
+        margin: 0 auto; /* Center text column */
+    }
+    .technology-content .text-column h1 {
+        font-size: 2.8em;
+    }
+    .technology-content .text-column .subheadline {
+        font-size: 1.1em;
+    }
+    .technology-content .text-column p {
+        font-size: 1em;
+    }
+    .technology-content .image-column {
+        order: 1; /* Image above text on mobile */
+        margin-bottom: 40px; /* Space between image and text */
+        max-width: 350px; /* Smaller max width for phone mockup */
+    }
+    .technology-content .phone-mockup {
+        padding: 15px; /* Adjust padding */
+    }
+}
+
+@media (max-width: 767px) { /* Mobile */
+    .technology-section {
+        padding: 60px 0;
+    }
+    .technology-content h1 {
+        font-size: 2.2em;
+    }
+    .technology-content .text-column .subheadline {
+        font-size: 1em;
+    }
+    .technology-content .text-column p {
+        font-size: 0.95em;
+    }
+    .technology-content .enquire-button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+    .technology-content .image-column {
+        margin-bottom: 30px;
+        max-width: 300px;
+    }
+    .technology-content .phone-mockup {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 575px) { /* Smaller mobile devices */
+    .technology-section {
+        padding: 40px 0;
+        
+    }
+    .technology-content {
+        flex-direction: column; /* Stack columns vertically */
+        text-align: center; /* Center text column content */
+        margin-top: 80px;
+    }
+    .technology-content h1 {
+        font-size: 1.8em;
+        margin-left: 60px;
+        margin-top: 0px;
+    }
+    .technology-content .text-column .subheadline {
+        font-size: 0.9em;
+        text-align: center;
+    }
+    .technology-content .text-column p {
+        font-size: 0.9em;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    .technology-content .enquire-button {
+        padding: 10px 20px;
+        margin-left: 130px;
+        font-size: 0.9em;
+        margin-top: 0px;
+        
+    }
+    .technology-content .image-column {
+        margin-bottom: 0px;
+        max-width: 700px;
+    }
+}

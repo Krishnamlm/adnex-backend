@@ -13,7 +13,7 @@ require('dotenv').config();
 const MongoStore = require('connect-mongo');
 
 const authRoutes = require('./routes/authRoutes');
-const isAuthenticated = require = require('./middleware/isAuthenticated'); // Corrected typo here, was "isAuthenticated = require ="
+const isAuthenticated = require('./middleware/isAuthenticated');
 require('./config/passport');
 
 const app = express();

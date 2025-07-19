@@ -318,7 +318,20 @@
   });
 </script>
 
-
+    <script>
+        // Simple client-side check on page load for protected HTML files
+        // If no token or invalid, the backend would have redirected anyway,
+        // but this adds a layer of client-side handling.
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                // If the backend didn't already redirect, do it client-side
+                window.location.href = '/login.html?login=required';
+            }
+            // If token exists, the backend should have allowed access.
+            // Further API calls from this page should use fetchProtected.
+        });
+    </script>
 
 </body>
 </html>

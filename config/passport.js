@@ -55,7 +55,7 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     // CRITICAL FIX: Use the full HTTPS URL for the callback
-    callbackURL: "https://adnex-backend.onrender.com/auth/google/callback"
+    callbackURL: "https://api.adnextechnologies.in/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {

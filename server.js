@@ -5,7 +5,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
-const cors = require('cors'); // Keep if you expect other external API consumers
+const cors = require('cors');
 const morgan = require('morgan');
 const colors = require('colors');
 require('dotenv').config();
@@ -13,8 +13,10 @@ require('dotenv').config();
 const MongoStore = require('connect-mongo');
 
 const authRoutes = require('./routes/authRoutes');
-const isAuthenticated = require('./middleware/isAuthenticated');
-require('./config/passport');
+// const isAuthenticated = require('./middleware/isAuthenticated'); // <-- COMMENT OUT or REMOVE this line!
+const authenticateJWT = require('./middleware/authenticateJWT'); // <-- NEW: Import the JWT middleware
+
+require('./config/passport'); // Passport configuration
 
 const app = express();
 
@@ -27,19 +29,16 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.error(colors.red('MongoDB connection error:', err)));
 
 // --- Core Middleware ---
-// Adjust CORS for monolithic setup.
-// If your frontend and backend are on the SAME origin now, CORS is technically not needed for requests between them.
-// Keep it if you have other external API consumers, otherwise you can simplify/remove.
 app.use(cors({
-    origin: true, // Allow the request's origin (good for same-site, or if you also have external clients)
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true // Crucial for sending cookies with AJAX requests
+    credentials: true
 }));
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// --- Session Setup ---
+// --- Session Setup (Still needed for Passport's initial local/Google login success) ---
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -54,8 +53,7 @@ app.use(session({
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        // *** CRITICAL CHANGE: SameSite is now 'lax' for a monolithic app ***
-        sameSite: 'lax', // Use 'lax' or 'strict' as it's now same-site
+        sameSite: 'lax',
     }
 }));
 
@@ -64,51 +62,44 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // --- Static Files ---
-// This serves all files directly from the 'public' directory.
-app.use(express.static(path.join(__dirname, 'public'))); // Use path.join for robustness
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 // --- API Routes (MUST come before any frontend HTML serving routes that might match the same path) ---
 app.use('/auth', authRoutes); // All /auth/* routes are handled by authRoutes
 
-// --- REMOVED: Conflicting /auth/login route. authRoutes handles this. ---
-// app.get('/auth/login', (req, res) => {
-//     res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
-// });
-
 // Protected routes serving HTML files (assuming these HTMLs are now directly in 'public')
-app.get('/contact', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'contact.html')); // *** ADJUSTED PATH ***
+// *** CRITICAL CHANGE: Replace isAuthenticated with authenticateJWT for these routes! ***
+app.get('/contact', authenticateJWT, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'contact.html'));
 });
 
-app.get('/internship-form', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'internship-form.html')); // *** ADJUSTED PATH ***
+app.get('/internship-form', authenticateJWT, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'internship-form.html'));
 });
 
-app.get('/graphic-html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'graphic.html')); // *** ADJUSTED PATH ***
+app.get('/graphic-html', authenticateJWT, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'graphic.html'));
 });
 
-app.get('/development-html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'development.html')); // *** ADJUSTED PATH ***
+app.get('/development-html', authenticateJWT, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'development.html'));
 });
 
-app.get('/digital-html', isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'digital.html')); // *** ADJUSTED PATH ***
+app.get('/digital-html', authenticateJWT, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'digital.html'));
 });
 
 // NEW ENDPOINT: Check authentication status from client-side
-app.get('/auth/status', isAuthenticated, (req, res) => {
-    res.status(200).json({ isAuthenticated: true, user: req.user.username });
+// *** CRITICAL CHANGE: Replace isAuthenticated with authenticateJWT for this route! ***
+app.get('/auth/status', authenticateJWT, (req, res) => {
+    // If authenticateJWT passes, req.user will be populated
+    res.status(200).json({ isAuthenticated: true, user: req.user.id }); // Use req.user.id from JWT
 });
 
-// --- Catch-all Route for Frontend HTML files (CRITICAL FOR MONOLITHIC SPA-like setup) ---
-// This serves your main index.html for any route not explicitly handled above.
-// It MUST be placed AFTER all API routes and specific HTML file serving routes.
+// --- Catch-all Route for Frontend HTML files ---
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-
 
 // --- Start server ---
 const port = process.env.PORT || 5000;

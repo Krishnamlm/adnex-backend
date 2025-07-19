@@ -234,6 +234,72 @@ document.addEventListener('DOMContentLoaded', () => {
                 whatsappIcon.removeEventListener('animationend', handleAnimationEnd);
             };
 
+
+		// adnex-backend/public/js/main.js
+
+// ... (your existing main.js code) ...
+
+// Add this event listener to intercept clicks on protected links
+document.addEventListener('DOMContentLoaded', () => {
+    // Select all links that point to your protected HTML routes
+    // Ensure these selectors match your actual HTML link hrefs.
+    const protectedLinkSelectors = [
+        'a[href="/graphic-html"]',
+        'a[href="/internship-form"]',
+        'a[href="/contact"]',
+        'a[href="/development-html"]',
+        'a[href="/digital-html"]'
+    ];
+    const protectedLinks = document.querySelectorAll(protectedLinkSelectors.join(', '));
+
+    protectedLinks.forEach(link => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault(); // Prevent the default browser navigation
+
+            const targetUrl = link.getAttribute('href');
+
+            try {
+                // Attempt to fetch the protected page content using our new utility function.
+                // The 'Accept': 'text/html' header tells the server we expect HTML back.
+                const response = await fetchProtected(targetUrl, {
+                    headers: {
+                        'Accept': 'text/html'
+                    }
+                });
+
+                if (response.ok) {
+                    // If the fetch was successful, it means the JWT was valid and the backend
+                    // is willing to serve the page.
+                    // Now, perform the actual browser navigation. The browser will make a new GET request for this URL.
+                    // Since the user now effectively has a "valid session" (because the token check passed),
+                    // the backend should serve the page.
+                    window.location.href = targetUrl;
+                } else {
+                    // This else block might catch other non-401/403 HTTP errors (e.g., 500 server error)
+                    console.error(`Failed to load protected page ${targetUrl}:`, response.status, response.statusText);
+                    // You might want to show a user-friendly error or redirect to a generic error page
+                    window.location.href = '/login.html?login=fetch_error'; // Fallback redirect
+                }
+
+            } catch (error) {
+                // This catch block handles errors thrown by fetchProtected (e.g., "Authentication required.")
+                // fetchProtected already handles redirects for no token or invalid token, so no need for
+                // further redirect logic here.
+                console.error('Error during protected link navigation:', error);
+            }
+        });
+    });
+
+    // Optional: Add event listener for a logout button if you have one
+    const logoutButton = document.getElementById('logout-button'); // Example: assumes an element with id="logout-button"
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            logoutUser(); // Call the logout function from authUtils.js
+        });
+    }
+});
+
             whatsappIcon.addEventListener('animationend', handleAnimationEnd);
         });
     }

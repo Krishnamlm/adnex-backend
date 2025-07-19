@@ -56,7 +56,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production',
         // --- REMOVED maxAge: This makes it a session cookie that expires on browser close ---
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         domain: process.env.NODE_ENV === 'production' ? '.adnextechnologies.in' : undefined
     }
 }));

@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="Description" content="Enter your description here"/>
+<title>AdNex Technologies</title>
+
+<link rel="icon" type="image/png" href="images/favicon.png">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<link rel="stylesheet" href="css/owl/owl.carousel.min.css">
+<link rel="stylesheet" href="css/owl/owl.theme.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                                <style>@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+
+
+body {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    background: #f2f2f2;
+}
+
+.wrapper {
+    display: grid;
+    margin: 50px 30px auto;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+}
+
+@media (max-width: 700px) {
+    .wrapper {
+        margin: 10px auto;
+    }
+}
+
+.wrapper .box {
+    width: 350px;
+    margin: 0 auto;
+    position: relative;
+    perspective: 1000px;
+}
+
+.wrapper .box .front-face {
+    background: #fff;
+    height: 220px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0px 5px 20px 0px rgba(0, 81, 250, 0.1);
+    transition: all 0.5s ease;
+}
+
+.box .front-face .icon {
+    height: 80px;
+}
+
+.box .front-face .icon i {
+    font-size: 65px;
+}
+
+.box .front-face span,
+.box .back-face span {
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.box .front-face .icon i,
+.box .front-face span {
+    background: linear-gradient(-135deg, #165e6b, #4293a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.box .back-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    height: 220px;
+    width: 100%;
+    padding: 30px;
+    color: #fff;
+    opacity: 0;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    background: linear-gradient(-135deg, #06c6e7, #0a576b);
+    transform: translateY(110px) rotateX(-90deg);
+    box-shadow: 0px 5px 20px 0px rgba(0, 81, 250, 0.1);
+    transition: all 0.5s ease;
+}
+
+.box .back-face p {
+    margin-top: 10px;
+    text-align: justify;
+}
+
+.box:hover .back-face {
+    opacity: 1;
+    transform: rotateX(0deg);
+}
+
+.box:hover .front-face {
+    opacity: 0;
+    transform: translateY(-110px) rotateX(90deg);
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(2, 96, 103, 0.751);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-content {
+  background: white;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 5px;
+  width: 25vw; /* ✅ Use viewport width */
+  max-width: 400px; /* ✅ Controls max size */
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.popup-header {
+  background: rgb(6, 1, 74);
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 0.96rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+  .welcome {
+    margin-left: 30px;
+    font-size: 15px;
+}
+
+.close-btn {
+  cursor: pointer;
+}
+
+.popup-image {
+  width: 90%;
+  height: auto;
+  display: block;
+}
+@keyframes popupZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.popup-content {
+  animation: popupZoomIn 0.5s ease;
+}
+
+
+@media (max-width: 768px) {
+
+  .popup-header {
+    
+    background: rgb(2, 9, 86);
+    color: white;
+    font-size: 50px;
+    
+  }
+
+  .welcome {
+    margin-left: 10px;
+    font-size: 14px;
+}
+.popup-header .close-btn {
+    color: rgb(132, 240, 252) !important;  /* Make sure it overrides all */;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .popup-header {
+    
+    background: rgb(5, 1, 61);
+    color: white;
+    font-size: 0.8rem;
+  }
+
+  .welcome {
+    margin-left: 55px;
+    font-size: 11px;
+}
+.popup-header .close-btn {
+    color: rgb(132, 240, 252) !important;  /* Make sure it overrides all */;
+    font-size: 15px;
+  }
+}
+
+
+/* Image */
+.popup-image {
+  width: 100%;
+  display: block;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.popup-content {
+  background: white;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 10px;
+  max-width: 350px;
+  width: 90%;
+  position: relative;
+  overflow: hidden;
+}
+
+.popup-header .close-btn {
+    color: rgb(132, 240, 252) !important;  /* Make sure it overrides all */
+  }
+  
+  .close-btn {
+  cursor: pointer;
+     color: rgb(149, 233, 249) !important;  /* Force override on iOS */
+}
+
+/* In your style.css file */
+
+/* Ensure body is simple again if you removed the full-page background */
+
+
+/* In your style.css file */
+
+/* Ensure body is simple again if you removed the full-page background */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0d121f; /* A deeper, more uniform dark background for better contrast */
+    color: #fff; /* Default text color for the whole page */
+    overflow-x: hidden;
+    line-height: 1.6;
+    
+}
+
+/* --- ADVANCED ANIMATED SERVICES SECTION --- */
+.services-section {
+    padding: 20px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* Important to clip the animated blobs */
+    z-index: 1;
+    /* Richer, dynamic base gradient for a luxurious feel */
+    background: linear-gradient(135deg, #0a171a, #0a191a, #0A1A1A); /* Dark, subtle color shifts */
+    color: #fff; /* Base text color for the section */
+    /* A subtle, continuous background animation for the whole section */
+    animation: sectionDynamicBackground 40s infinite linear alternate;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5); /* Inner shadow for depth */
+}
+
+/* Keyframe for subtle section background glow with color shifts */
+@keyframes sectionDynamicBackground {
+    0% { background-position: 0% 0%; background-color: #0A0A1A; }
+    25% { background-position: 25% 25%; background-color: #120A1A; }
+    50% { background-position: 50% 50%; background-color: #0A1A1A; }
+    75% { background-position: 75% 75%; background-color: #1A0A1A; }
+    100% { background-position: 100% 100%; background-color: #0A0A1A; }
+}
+
+/* Ensure the content itself is above the animations */
+.services-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Premium text styling for contrast against the background */
+.services-section .section-title,
+.services-section .section-subtitle,
+.services-section .service-card h3,
+.services-section .service-card p {
+    color: #ffffff;
+    text-shadow: 0px 0px 12px rgba(255, 255, 255, 0.2), /* Enhanced white glow */
+                 0px 0px 5px rgba(0, 0, 0, 0.6); /* Deeper shadow for definition */
+    pointer-events: none; /* Text doesn't interfere with mouse events for cards */
+}
+/* Specific style for animated logo wrapper */
+#animated-logo-wrapper {
+    margin-top: 30px;
+    margin-bottom: 50px;
+    display: inline-block; /* Allows centering with text-align */
+}
+
+/* --- ADVANCED GLASSMORHPISM FOR SERVICE CARDS --- */
+.services-section .services-grid {
+    perspective: 1500px; /* Enables 3D transforms for cards */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px; /* Increased gap */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.services-section .service-card {
+    background: rgba(255, 255, 255, 0.05); /* Even more subtle transparency (5% white) */
+    border-radius: 25px; /* More pronounced rounded corners */
+    /* Advanced box-shadow for multifaceted depth and light */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), /* Primary dark shadow */
+                0 0 20px rgba(255, 255, 255, 0.03) inset, /* Subtle inner highlight */
+                0 0 30px rgba(255, 255, 255, 0.01) inset; /* Deeper inner highlight */
+    backdrop-filter: blur(20px) saturate(1.8); /* Stronger blur, increased saturation for vibrancy */
+    -webkit-backdrop-filter: blur(20px) saturate(1.8); /* Safari support */
+
+   
+    border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1)) 1; /* Subtle initial gradient border */
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 45px; /* More padding for spaciousness */
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); /* Slower, more impactful transition */
+    will-change: transform, box-shadow, border-image;
+
+    /* Subtle continuous animation for the card itself (gentle breathe + subtle 3D tilt) */
+    animation: cardBreathing 18s infinite ease-in-out alternate,
+               cardFloating 25s infinite ease-in-out alternate;
+    transform-style: preserve-3d; /* Allows child elements to maintain 3D context */
+}
+
+/* Keyframe for subtle card breathing animation (slightly adjusted) */
+@keyframes cardBreathing {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.008); } /* Very slight enlarge */
+    100% { transform: scale(1); }
+}
+
+/* Keyframe for subtle card floating (vertical drift) */
+@keyframes cardFloating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+/* --- ENHANCED HOVER EFFECTS FOR SERVICE CARDS --- */
+.services-section .service-card:hover {
+    transform: translateY(-20px) scale(1.06) rotateX(5deg) rotateY(5deg); /* More pronounced lift, scale, and subtle 3D tilt */
+    /* More pronounced shadow on hover with glowing effect */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), /* Deeper dark shadow */
+                0 0 30px rgba(255, 255, 255, 0.15) inset, /* Brighter inner light */
+                0 0 50px rgba(100, 200, 255, 0.3); /* Outer glow on hover */
+    /* More vibrant, dynamic gradient border on hover */
+    border-image: linear-gradient(45deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4), rgba(100, 200, 255, 0.5)) 1;
+}
+
+/* --- PREMIUM ICON WRAPPER & ANIMATION --- */
+.services-section .icon-wrapper {
+    background: rgba(255, 255, 255, 0.1); /* Very subtle transparency */
+    border-radius: 50%;
+    width: 100px; /* Larger icon wrapper */
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    /* Deeper glow shadow for the wrapper */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15), /* Soft glow */
+                0 0 8px rgba(255, 255, 255, 0.08) inset; /* Inner highlight */
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Defined border */
+    transition: all 0.4s ease-out;
+    overflow: hidden;
+    position: relative;
+    transform-style: preserve-3d; /* For icon 3D effect */
+    perspective: 500px;
+}
+
+.services-section .icon-wrapper i {
+    font-size: 4em; /* Even larger icons for maximum impact */
+    color: #ffffff;
+    text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5), /* Stronger glow for icons */
+                 0px 0px 8px rgba(0, 0, 0, 0.5); /* Definition shadow */
+    transition: all 0.3s ease-out;
+    z-index: 1; /* Ensure icon is above shimmer */
+    /* Subtle continuous icon animation */
+    animation: iconPulse 5s infinite alternate ease-in-out;
+}
+
+@keyframes iconPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Icon wrapper shimmer effect - a moving light band */
+.services-section .icon-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -50%; /* Start slightly off-screen */
+    left: -75%;
+    width: 50%;
+    height: 200%; /* Cover more area for a longer shimmer */
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); /* Gradient shimmer */
+    transform: skewX(-20deg) rotateZ(10deg); /* Angled shimmer, slight rotation */
+    transition: all 0.4s ease-out;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.services-section .icon-wrapper:hover::before {
+    left: 125%; /* Move across on hover */
+    transition: all 0.7s ease-out; /* Slower, more elegant shimmer */
+}
+
+.services-section .icon-wrapper:hover i {
+    color: #FFF;
+    transform: scale(1.15) rotateZ(5deg); /* Icon slightly enlarges and rotates on hover */
+}
+
+
+/* --- ADVANCED ANIMATED BACKGROUND ELEMENTS FOR SERVICES SECTION --- */
+.services-section::before,
+.services-section::after,
+.services-section .animated-shape-1,
+.services-section .animated-shape-2 {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px); /* Even stronger blur for maximum diffusion */
+    opacity: 0.5; /* Slightly less opaque for better blending with dark background */
+    will-change: transform;
+    /* Apply a very subtle continuous animation to the blur itself */
+    animation: blobMorph 30s infinite alternate ease-in-out;
+}
+
+/* New keyframe for subtle blob shape morphing/breathing */
+@keyframes blobMorph {
+    0% { transform: scale(1); filter: blur(100px); }
+    50% { transform: scale(1.05); filter: blur(130px); } /* Pulsating blur */
+    100% { transform: scale(1); filter: blur(100px); }
+}
+
+/* Shape 1 (Top Left) - More complex gradient */
+.services-section::before {
+    background: radial-gradient(circle at top left, #FF5733, #FFC300); /* Fiery radial */
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -100px;
+    animation: serviceBlob1 25s infinite alternate ease-in-out, blobMorph 30s infinite alternate ease-in-out;
+}
+
+/* Shape 2 (Bottom Right) - Deep, luminous gradient */
+.services-section::after {
+    background: radial-gradient(circle at bottom right, #581845, #900C3F); /* Deep violet to crimson */
+    width: 500px;
+    height: 500px;
+    bottom: -120px;
+    right: -120px;
+    animation: serviceBlob2 30s infinite alternate-reverse ease-in-out, blobMorph 32s infinite alternate-reverse ease-in-out;
+}
+
+/* Shape 3 (Center Top) - Energetic, electric gradient */
+.services-section .animated-shape-1 {
+    background: radial-gradient(circle at center, #00C9FF, #66FFD1); /* Aqua to vibrant green */
+    width: 350px;
+    height: 350px;
+    top: 10%;
+    left: 30%;
+    animation: serviceBlob3 22s infinite alternate ease-in-out, blobMorph 28s infinite alternate ease-in-out;
+}
+
+/* Shape 4 (Center Bottom) - Warm, soft gradient */
+.services-section .animated-shape-2 {
+    background: radial-gradient(circle at center, #FF8C00, #FFD700); /* Dark orange to gold */
+    width: 450px;
+    height: 450px;
+    bottom: 8%;
+    right: 20%;
+    animation: serviceBlob4 27s infinite alternate-reverse ease-in-out, blobMorph 35s infinite alternate-reverse ease-in-out;
+}
+
+/* Particle Overlay Effect */
+.animated-particle-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Crucial: ensures clicks pass through */
+    z-index: 1; /* Below content, above blobs */
+    background: transparent;
+    /* Create multiple layers of faint glowing "particles" */
+    box-shadow:
+        0 0 100px 50px rgba(255, 255, 255, 0.05), /* Large, diffused glow */
+        0 0 50px 20px rgba(255, 255, 255, 0.03) /* Medium diffused glow */
+    ;
+    /* Subtle continuous animation for the overlay itself */
+    animation: particleGlow 20s infinite alternate ease-in-out;
+}
+
+@keyframes particleGlow {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.01); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* --- Keyframe Animations for Service Section Blobs (adjusted timings/intensity) --- */
+/* These are largely the same but with potentially adjusted values for more movement */
+@keyframes serviceBlob1 {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, -100px) scale(1.08); }
+    50% { transform: translate(-120px, 150px) scale(0.95); }
+    75% { transform: translate(150px, -60px) scale(1.15); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes serviceBlob2 {
+    0% { transform: translate(0, 0) scale(1); }
+    20% { transform: translate(-80px, 180px) scale(0.9); }
+    40% { transform: translate(160px, -100px) scale(1.1); }
+    60% { transform: translate(-100px, -150px) scale(1.05); }
+    80% { transform: translate(70px, 160px) scale(0.95); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes serviceBlob3 {
+    0% { transform: translate(0, 0) scale(1); }
+    30% { transform: translate(-120px, 70px) scale(1.12); }
+    60% { transform: translate(90px, -130px) scale(0.93); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes serviceBlob4 {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(100px, 80px) scale(0.9); }
+    50% { transform: translate(-150px, -70px) scale(1.1); }
+    75% { transform: translate(120px, -50px) scale(0.95); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+/* --- Animation Utility Classes (as before) --- */
+.anim-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: none;
+}
+.anim-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+#services-title,
+#services-subtitle,
+#animated-logo-wrapper {
+    opacity: 0;
+    transform: translateY(40px); /* Slightly more pronounced initial offset */
+}
+.icon-wrapper i[data-icon-anim] {
+    opacity: 0;
+    transform: scale(0.4) rotateZ(-90deg); /* More dramatic icon initial state */
+    transition: none;
+}
+.service-card {
+    opacity: 0;
+    transform: translateY(60px) scale(0.85); /* More pronounced initial state */
+    transition: none;
+    transform-origin: center center; /* Ensures scale animates from center */
+}
+
+/* In your style.css file or within <style> tags in your HTML <head> */
+@keyframes rotateClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* New CSS for Orbit Animation */
+.header-img-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0px;
+
+
+    /* background-color: #1a0f3d; */ /* Dark background similar to image */
+    border-radius: 20px;
+    margin-top: 0px; /* Keep original margin-top */
+}
+
+.orbit-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orbit-center-button {
+    position: relative;
+    z-index: 10;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #794903, #281101); /* Purple gradient */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse 2s infinite ease-in-out; /* Add a subtle pulse */
+}
+
+.orbit-center-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); }
+    50% { transform: scale(1.03); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); }
+}
+
+
+.orbit-path {
+    position: absolute;
+    margin-top: 20px;
+
+    transform: translate(-50%, -50%);
+    border: 1px dashed rgba(255, 255, 255, 0.2); /* Dashed white border for paths */
+    border-radius: 50%;
+}
+
+.orbit-path-inner {
+    width: 300px;
+    height: 300px;
+    animation: orbit-animation-inner 15s linear infinite; /* Faster orbit */
+}
+
+.orbit-path-outer {
+    width: 430px;
+    height: 430px;
+    animation: orbit-animation-outer 25s linear infinite; /* Slower orbit */
+}
+
+.orbit-icon {
+    position: absolute;
+    width: 50px; /* Size of icons */
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle background for icons */
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden; /* Ensure image fits */
+}
+
+.orbit-icon img {
+    width: 70%; /* Image size inside icon circle */
+    height: 70%;
+    object-fit: contain;
+    filter: brightness(1.2); /* Slightly brighter icons */
+}
+
+/* Keyframes for orbit animation */
+@keyframes orbit-animation-inner {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes orbit-animation-outer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Individual icon positioning within their orbit path */
+/* Inner Orbit Icons */
+.orbit-path-inner .orbit-icon:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); } /* Top center */
+.orbit-path-inner .orbit-icon:nth-child(2) { top: 15%; left: 90%; transform: translate(-50%, -50%); } /* Top-right */
+.orbit-path-inner .orbit-icon:nth-child(3) { top: 50%; left: 100%; transform: translate(-50%, -50%); } /* Bottom-right */
+.orbit-path-inner .orbit-icon:nth-child(4) { top: 85%; left: 90%; transform: translate(-50%, -50%); } /* Bottom center */
+.orbit-path-inner .orbit-icon:nth-child(5) { top: 100%; left: 50%; transform: translate(-50%, -50%); } /* Bottom-left */
+.orbit-path-inner .orbit-icon:nth-child(6) { top: 85%; left: 10%; transform: translate(-50%, -50%); } /* Top-left */
+.orbit-path-inner .orbit-icon:nth-child(7) { top: 50%; left: 0%; transform: translate(-50%, -50%); } /* Mid-left */
+.orbit-path-inner .orbit-icon:nth-child(8) { top: 15%; left: 10%; transform: translate(-50%, -50%); } /* Mid-right */
+
+
+/* Outer Orbit Icons */
+.orbit-path-outer .orbit-icon:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); } /* Top center */
+.orbit-path-outer .orbit-icon:nth-child(2) { top: 15%; left: 90%; transform: translate(-50%, -50%); } /* Top-right */
+.orbit-path-outer .orbit-icon:nth-child(3) { top: 50%; left: 100%; transform: translate(-50%, -50%); } /* Mid-right */
+.orbit-path-outer .orbit-icon:nth-child(4) { top: 85%; left: 90%; transform: translate(-50%, -50%); } /* Bottom-right */
+.orbit-path-outer .orbit-icon:nth-child(5) { top: 100%; left: 50%; transform: translate(-50%, -50%); } /* Bottom center */
+.orbit-path-outer .orbit-icon:nth-child(6) { top: 85%; left: 10%; transform: translate(-50%, -50%); } /* Bottom-left */
+.orbit-path-outer .orbit-icon:nth-child(7) { top: 50%; left: 0%; transform: translate(-50%, -50%); } /* Mid-left */
+.orbit-path-outer .orbit-icon:nth-child(8) { top: 15%; left: 10%; transform: translate(-50%, -50%); } /* Top-left */
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+
+    .orbit-center-button {
+    position: relative;
+    z-index: 10;
+    margin-top: 30px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #794903, #281101); /* Purple gradient */
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.7em;
+    font-weight: 100;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse 2s infinite ease-in-out; /* Add a subtle pulse */
+}
+
+.orbit-center-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); }
+    50% { transform: scale(1.03); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4); }
+}
+
+    .header-img-section {
+        height: 350px; /* Even smaller height for small mobiles */
+    }
+    .orbit-path-inner {
+        width: 200px;
+        height: 200px;
+        margin-top: 70px;
+        margin-bottom: 30px;
+    }
+    .orbit-path-outer {
+        width: 300px;
+        height: 300px;
+        margin-top: 70px;
+        margin-bottom: 30px;
+    }
+    .orbit-icon {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
+
+
+</style>
+</head>
+<body data-bs-spy="scroll" data-bs-target=".navbar" data-bs-offset="85">
+
+    <header class="header_wrapper">
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="images/logo-new.png" class="img-fluid" alt="logo">
+            </a>
+            <button class="navbar-toggler pe-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon d-none"></span> <img src="images/icons8-menu.gif" alt="Menu" class="custom-toggler-icon"> </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav menu-navbar-nav"> <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">HOME</a> </li>
+                    <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            SOLUTIONS <span class="sub-arrow"></span>
+                        </a>
+                        <ul class="dropdown-menu custom-dropdown" aria-labelledby="servicesDropdown"> <li style="--i: 1"><a class="dropdown-item" href="/graphic-html">GRAPHIC DESIGNING SERVICES</a></li>
+                            <li style="--i: 2"><a class="dropdown-item" href="/development-html">CUSTOM SOFTWARE, WEB & MOBILE DEVELOPMENT</a></li>
+                            <li style="--i: 3"><a class="dropdown-item" href="/digital-html">DIGITAL MARKETING & PERFORMANCE CAMPAIGNS</a></li>
+                            <li style="--i: 4"><a class="dropdown-item" href="/graphic-html">SOCIAL MEDIA MARKETING AGENCY</a></li>
+                            <li style="--i: 5"><a class="dropdown-item" href="/graphic-html">ORGANIC SEO SERVICES</a></li>
+                            <li style="--i: 6"><a class="dropdown-item" href="/graphic-html">VIDEO PRODUCTION (SOCIAL MEDIA OR AD FILMS)</a></li>
+                            <li style="--i: 7"><a class="dropdown-item" href="/graphic-html">WEB HOSTING SERVICES</a></li>
+                            <li style="--i: 8"><a class="dropdown-item" href="/graphic-html">PAYMENT GATEWAY SERVICES</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">WHO WE ARE</a>
+                    </li>                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="Courses.html">COURSES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/extra.html">INTERNSHIP</a> </li>
+                         <li class="nav-item">
+                        <a class="nav-link" href="#reviews">CAREER</a>
+                    </li> 
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item text-center">
+                        <a class="nav-link learn-more-btn-header" href="/auth/login"><i class="fa fa-rocket" aria-hidden="true"></i>Login</a> </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+    <section id="home" class="banner_wrapper">
+    <div class="banner-bg-blob blob-1"></div>
+    <div class="banner-bg-blob blob-2"></div>
+    <div class="banner-bg-gradient-overlay"></div> <div class="banner-particle-system"></div> <div class="container banner-content-container">
+        <div class="row align-items-center">
+            <div class="col-md-6 header-img-section" style="margin-top: 60px;">
+                <div class="orbit-container">
+                    <button class="orbit-center-button"><img src="images/logo-new.png" alt="" style="width: 90px;"></button>
+
+                    <div class="orbit-path orbit-path-inner">
+                        <div class="orbit-icon"><img src="images/react.png" alt="VS Code"  style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/python.png" alt="Python" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/java.png" alt="AI" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/javascript.png" alt="AE" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="https://img.icons8.com/?size=100&id=21278&format=png&color=000000" alt="PS" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="https://img.icons8.com/?size=100&id=20909&format=png&color=000000" alt="In Design" style="animation: rotateClockwise 3s linear infinite;"></div>
+                         <div class="orbit-icon"><img src="images/flutter.png" alt="Flutter" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/c++.png" alt="Figma" style="animation: rotateClockwise 3s linear infinite;"></div>
+                    </div>
+
+                    <div class="orbit-path orbit-path-outer">
+                        <div class="orbit-icon"><img src="images/ps.png" alt="AI" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/ai.png" alt="Flutter" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" alt="PS" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/vs code.png" alt="VS Code" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/flutter.png" alt="Python" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/ae.png" alt="AE" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/figma.png" alt="Figma" style="animation: rotateClockwise 3s linear infinite;"></div>
+                        <div class="orbit-icon"><img src="images/in design.png" alt="In Design" style="animation: rotateClockwise 3s linear infinite;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 my-5 my-md-0 text-center text-md-start">
+                <p class="Hub">A Creative Hub And Tech Studio</p>
+                <h1 class="banner-title">
+                    <span class="title">Bringing</span> 
+                    <span class="title2">Vision</span><br>
+                    <span class="title22">&</span><br>
+                    <span class="title5"> Creativity</span>
+                    <span class="title3">  Together</span>
+                </h1>
+                <p class="banner-title-text anim-text-fade-in">AdNex is a dynamic creative studio where vision takes flight and ideas find a home. We specialize in delivering end-to-end digital solutions by blending creativity, design, and technology to help brands and startups thrive in the digital age.</p>
+                <div class="learn-more-btn-section anim-fade-up">
+                    <a class="nav-link learn-more-btn btn-header" href="/contact">LET'S TALK <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>  
+    <section  class="about_wrapper">
+        <div class="innovate">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-sm-12 col-lg-6 px-5 text-center text-md-start">
+                        <img src="images/innovation.png" class="img-fluid" style="margin-bottom: 20px;">
+                    </div>
+                    <div class="col-sm-12 col-lg-6 text-center text-lg-start">
+                        
+                        <h2 class="about_title">Result-driven digital marketing solutions that elevate your brand and accelerate revenue growth.</h2>
+                        <p class="about_text">From eye-catching graphics to modern websites and powerful mobile apps — we build visual experiences that connect, engage, and grow your brand. Our team blends design thinking with technology to deliver pixel-perfect results.</p>
+                        <div class="mt-5">
+                            <a class="learn-more-btn btn-header" id="learn-more" href="#learn-more">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <section class="services-section">
+        <div class="container">
+            <h2 class="section-title anim-hidden">Our Services</h2>
+            <p class="section-subtitle anim-hidden">We put in best services to achieve goals of our clientele.</p>
+
+            <div class="services-grid">
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <img src="images/coding_1329016.png" alt="codinng" style="width: 80px;">
+                    </div>
+                    <h3 style="text-align: center;">Web Design</h3>
+                    <p style="text-align: center;">We create visually appealing and functional websites, handling everything from design to development, ensuring a strong online presence.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3 style="text-align: center;">Mobile App Development</h3>
+                    <p style="text-align: center;">We craft custom mobile apps from concept to launch, providing end-to-end development services for diverse platforms.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 style="text-align: center;">Social Media Graphics</h3>
+                    <p style="text-align: center;">Social media visuals like templates, thumbnails, and ad creatives drive engagement, recognition, and clicks effectively.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 style="text-align: center;">Web Development</h3>
+                    <p style="text-align: center;">Using Advanced Technology in Web Development & Building the Secure & Easy To Control Admin, we impact businesses.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 style="text-align: center;">Social Media Marketing</h3>
+                    <p style="text-align: center;">Social media marketing involves strategy, content creation, page management, and paid ads to build presence and engage audiences online.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 style="text-align: center;">Organic SEO</h3>
+                    <p style="text-align: center;">Search Engine Optimization (SEO) boosts visibility. On-page/off-page, keyword research, technical, and local SEO improve search rankings to drive organic traffic.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3 style="text-align: center;">Web Hosting</h3>
+                    <p style="text-align: center;">We providing Reliable web hosting with blazing-fast speeds, robust security, and 24/7 expert support for seamless online presence.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3 style="text-align: center;">Marketing Materials</h3>
+                    <p style="text-align: center;">Brochures, flyers, posters, banners, Packaging Design and print ads are tangible tools that inform, persuade, and promote your brand effectively.</p>
+                </div>
+
+                <div class="service-card anim-hidden">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 style="text-align: center;">Video Marketing</h3>
+                    <p style="text-align: center;">Video marketing, using promotional videos, reels, and explainer animations, engages audiences powerfully, conveying messages quickly and effectively.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <section class="facts-figures-section" id="faqs" class="faq_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="fact-item">
+                    <p class="number" data-target="120">0</p>
+                    <p class="label">Completed Projects</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="fact-item">
+                    <p class="number" data-target="90">0</p>
+                    <p class="label">Happy Clients</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="fact-item">
+                    <p class="number" data-target="23">0</p>
+                    <p class="label">Ongoing Projects</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="fact-item">
+                    <p class="number" data-target="15">0</p>
+                    <p class="label">Awards Won</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <section id="brands" class="brand_wrapper">
+    <div class="brands-bg-blob brands-blob-1"></div>
+    <div class="brands-bg-blob brands-blob-2"></div>
+
+    <div class="brands-animated-grid"></div>
+
+    <div class="brands-bg-gradient-overlay"></div>
+    <div class="brands-particle-system"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <p class="brand_subtitle">Who we work with</p>
+                <h2 class="brand_title">Client showcase</h2>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center g-4">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="client_logo_card">
+                    <a href="#faq"><img src="images/dummy_logo2.png" class="img-fluid"></a>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="client_logo_card">
+                    <a href="#faq"><img src="images/dummy_logo1.png" class="img-fluid"></a>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="client_logo_card">
+                    <a href="#faq"><img src="images/dummy_logo2.png" class="img-fluid"></a>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="client_logo_card">
+                    <a href="#faq"><img src="images/dummy_logo1.png" class="img-fluid"></a>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="client_logo_card">
+                    <a href="#faq"><img src="images/dummy_logo3.png" class="img-fluid" ></a>
+                </div>
+            </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="client_logo_card">
+                    <a href="#faq"><img src="images/dummy_logo1.png" class="img-fluid"></a>
+                </div >
+            </div>
+
+            
+        </div>
+    </div>
+</section>
+
+
+
+  <section class="animated-glass-section" id="internship">
+    <div class="glass-bg-blob glass-blob-1"></div>
+    <div class="glass-bg-blob glass-blob-2"></div>
+    <div class="glass-animated-texture"></div>
+
+    <div class="container">
+        <h2 data-aos="fade-up">Explore Our Diverse Internship Programs!</h2>
+        <p class="section-description" data-aos="fade-up" data-aos-delay="150">Gain real-world experience, build your network, and launch your career with our impactful internships.
+
+</p>
+
+        <div class="glass-cards-grid">
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card-icon">
+                    <img src="images/front.png" alt="Creative Solutions Icon"/>
+                </div>
+                <h3>Frontend Development</h3>
+                <p>You'll build coding projects using HTML, CSS, JavaScript, and frameworks like React. Tasks include backend development, database interaction, Git for version control, debugging, and deployment for a strong portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card-icon">
+                    <img src="images/app.png" alt="Web Development Icon"/>
+                </div>
+                <h3>App Development</h3>
+                <p>You'll build mobile applications using relevant languages like Java/Swift/Kotlin or frameworks like React Native. Tasks include UI/UX design, API integration, debugging, and deployment for a strong portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="400">
+                <div class="card-icon">
+                    <img src="internship-form" alt="Mobile App Icon"/>
+                </div>
+                <h3>Flutter Development</h3>
+                <p>You'll develop cross-platform mobile apps using Flutter and Dart. Tasks involve UI creation, state management, API integration, debugging, and deployment, building a strong project portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-icon">
+                    <img src="images/ml.png" alt="Digital Marketing Icon"/>
+                </div>
+                <h3>Machine learning</h3>
+                <p>You'll learn to build and train models for data analysis, prediction, and pattern recognition. Tasks involve data preprocessing, algorithm selection, model evaluation, and deployment, building a strong portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-icon">
+    <img src="images/react.png" alt="Digital Marketing Icon" style="animation: rotateClockwise 10s linear infinite;"/>
+</div>
+                <h3>ReactJS Development</h3>
+                <p>You'll master building dynamic user interfaces using ReactJS, JSX, and component-based architecture. Tasks include state management, API integration, routing, debugging, and contributing to portfolio projects.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-icon">
+                    <img src="images/c++.png" alt="Digital Marketing Icon" style="animation: rotateClockwise 10s linear infinite;"/>
+                </div>
+                <h3>C++ Programming</h3>
+                <p>You'll master C++ fundamentals, object-oriented programming (OOP), and data structures. Tasks involve writing efficient code, debugging, algorithm implementation, and building console/system-level applications for your portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card-icon">
+                    <img src="images/java.png" alt="Creative Solutions Icon"/>
+                </div>
+                <h3>Java Programming</h3>
+                <p>You'll master Java fundamentals, object-oriented programming (OOP), and data structures. Tasks involve writing robust applications, debugging, framework (Spring/Hibernate) basics, and building enterprise-level projects for your portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card-icon">
+                    <img src="images/javascript.png" alt="Web Development Icon"/>
+                </div>
+                <h3>JavaScript Development</h3>
+                <p>You'll master core JavaScript, DOM manipulation, and asynchronous programming. Tasks include building interactive web features, using modern frameworks (React/Vue/Angular), API integration, debugging, and contributing to portfolio projects.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="400">
+                <div class="card-icon">
+                    <img src="images/python.png" alt="Mobile App Icon"style="animation: rotateClockwise 10s linear infinite;" />
+                </div>
+                <h3>Python Programming</h3>
+                <p>You'll master Python fundamentals, data structures, and object-oriented programming. Tasks involve writing efficient scripts, data analysis, automation, web development basics (Django/Flask), and building diverse projects for your portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-icon">
+                    <img src="images/data-analytics.png" alt="Digital Marketing Icon" style="animation: rotateClockwise 10s linear infinite;"/>
+                </div>
+                <h3>Data Science</h3>
+                <p>You'll learn to analyze data, build predictive models, and extract insights. Tasks involve data cleaning, visualization, statistical analysis, machine learning, and presenting findings for impactful projects.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-icon">
+                    <img src="images/uiux.png" alt="Digital Marketing Icon" style="animation: rotateClockwise 10s linear infinite;"/>
+                </div>
+                <h3>UI/UX Design</h3>
+                <p>You'll master user research, wireframing, prototyping, and visual design to create intuitive and engaging digital experiences. Tasks involve usability testing, feedback iteration, and building a strong design portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+
+            <div class="glass-card" data-aos="zoom-in" data-aos-delay="500">
+                <div class="card-icon">
+                    <img src="images/graphic.png" alt="Digital Marketing Icon"/>
+                </div>
+                <h3>Graphic Design</h3>
+                <p>You'll master design principles, software (Photoshop, Illustrator), and visual communication. Tasks involve creating logos, branding, marketing materials, and digital graphics, building a diverse portfolio.</p>
+                <a href="internship-form" class="glass-button">Apply Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+        <h2 class="features-title"><b>Unlock Your Potential with Our Key Features</b></h2>
+        <p class="features-description">We've meticulously designed our platform with Technology & Some Extra features that empower your internship journey, connecting you with opportunities and insights every step of the way.</p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="images/email-blast.png" alt="Email Notifications Icon">
+                </div>
+                <h3 class="feature-card-title">Smart Notification System</h3>
+                <p class="feature-card-description">Receive intelligent alerts for upcoming deadlines, new internship postings, and important schedule adjustments, keeping your progress on track.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="images/user.png" alt="Simple Interface Icon">
+                </div>
+                <h3 class="feature-card-title">Seamless User Journey</h3>
+                <p class="feature-card-description">A truly simple interface ensures easy navigation and clear, concise information, letting you focus on your goals without distractions.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <img src="images/deadline.png" alt="Deadline Reminders Icon">
+                </div>
+                <h3 class="feature-card-title">Timely Deadline Nudges</h3>
+<p class="feature-card-description">Receive essential reminders through email and Telegram, ensuring you effectively manage all your tasks and meet every important deadline without stress.</p>
+            </div>
+
+            </div>
+    </section>
+
+ <section id="faqs" class="faq_wrapper">
+
+    <div class="free_trial">
+        <div class="container">
+            <div class="row"> <div class="col-12 text-center"> <h2 class="free_title">Questions not listed above? Send us a message and we'll get back to you</h2>
+                </div>
+                <div class="col-12 text-center mt-4"> <a class="learn-more-btnn" href="/contact"><i class="fa fa-rocket" aria-hidden="true"></i> Free Consultation</a> 
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+ 
+    <footer class="main-footer">
+        <div class="footer-container">
+
+            <div class="footer-section footer-about">
+                <div class="footer-logo">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="#00BCD4" stroke-width="1.5"/>
+                        <path d="M9 9L15 15M15 9L9 15" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>ADNEX TECHNOLOGIES</span>
+                </div>
+                <p>
+                    Adnex Technologies empowers businesses with cutting-edge digital experiences. We craft innovative web solutions, redefine user interfaces, and amplify your online presence through data-driven strategies.
+                </p>
+            </div>
+
+            <div class="footer-section footer-links">
+                <h3>Our Services</h3>
+                <ul>
+                    <li><a href="websites.html">Web Development</a></li>
+                    <li><a href="services.html">Software Development</a></li>
+                    <li><a href="#">Graphic Designing</a></li>
+                    <li><a href="#">UI/UX Designing</a></li>
+                    <li><a href="#">SEO & Content</a></li>
+                    
+                    
+                </ul>
+            </div>
+
+            <div class="footer-section footer-links">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section footer-contact">
+                <h3>Get In Touch</h3>
+                <p class="mail">
+                    Mail us: <a href="mailto:adnextechnologies@gmail.com?subject=Adnex%20User">adnextechnologies@gmail.com</a>
+                </p>
+                <p class="support">
+                    Support: <a href="mailto:adnextechnologies@gmail.com?subject=Adnex%20User">adnextechnologies@gmail.com</a>
+                </p>
+                <p class="Visit">
+                    Visit us: Gwalior , Madhya Pradesh, India
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 AdNex Technologies. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <div id="popup-banner">
+  <div class="popup-overlay">
+    <div class="popup-content">
+      <div class="popup-header">
+        <div class="welcome" style="color: rgb(188, 233, 251);">WELCOME TO ADNEX TECHNOLOGIES</div>
+        
+        <span class="close-btn" onclick="closePopup()" style="color: orange;">✖</span>
+      </div>
+      <img src="images/pop.png" alt="We Are Hiring" class="popup-image" />
+    </div>
+  </div>
+</div>
+
+
+
+ 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+<script src="js/owl/owl.carousel.min.js"></script>
+ 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/main.js"></script>
+
+<script>document.addEventListener('DOMContentLoaded', () => {
+    const animateOnScroll = (elements, threshold = 0.1) => {
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('anim-visible');
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, { threshold: threshold });
+
+        elements.forEach(el => {
+            observer.observe(el);
+        });
+    };
+
+    // Animate the section title and subtitle
+    const sectionTitle = document.querySelector('.section-title');
+    const sectionSubtitle = document.querySelector('.section-subtitle');
+    animateOnScroll([sectionTitle, sectionSubtitle], 0.5); // Animate when 50% visible
+
+    // Animate individual service cards
+    const serviceCards = document.querySelectorAll('.service-card');
+    animateOnScroll(serviceCards, 0.2); // Animate when 20% of card is visible
+});
+
+gsap.registerPlugin(ScrollTrigger);
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Entrance Animation for Services Section (Titles, Cards) ---
+    const servicesSection = document.querySelector('.services-section');
+    const servicesTitle = document.getElementById('services-title');
+    const servicesSubtitle = document.getElementById('services-subtitle');
+    const animatedLogoWrapper = document.getElementById('animated-logo-wrapper');
+    const serviceCards = gsap.utils.toArray('.service-card');
+
+    // Define the timeline for the services section entrance
+    const servicesTimeline = gsap.timeline({
+        paused: true,
+        scrollTrigger: {
+            trigger: servicesSection,
+            start: "top center+=150", // Adjusted start for smoother reveal
+            toggleActions: "play none none none",
+            // markers: true, // Uncomment for debugging ScrollTrigger
+        }
+    });
+
+    // Animate title and subtitle
+    servicesTimeline.fromTo(servicesTitle,
+        { opacity: 0, y: 40, autoAlpha: 0 }, // autoAlpha handles visibility and opacity
+        { opacity: 1, y: 0, duration: 1.2, ease: "power4.out", autoAlpha: 1 }
+    )
+    .fromTo(servicesSubtitle,
+        { opacity: 0, y: 40, autoAlpha: 0 },
+        { opacity: 1, y: 0, duration: 1.2, ease: "power4.out", autoAlpha: 1 }, "<0.4"
+    );
+
+    // Animate the logo (if present)
+    if (animatedLogoWrapper) {
+        servicesTimeline.fromTo(animatedLogoWrapper,
+            { opacity: 0, scale: 0.4, y: 80, autoAlpha: 0 },
+            { opacity: 1, scale: 1, y: 0, duration: 1.5, ease: "elastic.out(1, 0.7)", autoAlpha: 1 }, "<0.5"
+        );
+
+        const svgPath = animatedLogoWrapper.querySelector('path');
+        if (svgPath) {
+            // For a truly premium SVG animation, GSAP's DrawSVGPlugin is ideal.
+            // If you don't have it, consider animating stroke-dasharray/offset or simple scale/opacity.
+            // Here's an example using a stroke-based animation if your SVG has strokes.
+            // If not, it will be a simple scale/fade-in for the fill.
+            gsap.set(svgPath, { fill: "rgba(255,255,255,0)", stroke: "#fff", strokeWidth: 0 }); // Initial state
+            servicesTimeline.to(svgPath, {
+                duration: 1.8,
+                strokeWidth: 3,
+                fill: "#ffffff",
+                ease: "power2.out",
+                // If using DrawSVG: drawSVG: "0% 100%"
+            }, "<0.3");
+        }
+    }
+
+    // Stagger service cards animation
+    serviceCards.forEach(card => {
+        const delay = parseFloat(card.dataset.animationDelay || 0);
+        servicesTimeline.fromTo(card,
+            { opacity: 0, y: 60, scale: 0.85, autoAlpha: 0 },
+            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "back.out(1.2)", autoAlpha: 1,
+              onComplete: () => {
+                // Remove anim-hidden after animation to allow hover effects etc.
+                card.classList.remove('anim-hidden');
+                // Optional: Trigger icon animation only after card animates in
+                const icon = card.querySelector('[data-icon-anim]');
+                if (icon) {
+                    gsap.fromTo(icon,
+                        { opacity: 0, scale: 0.4, y: 30, rotate: -90, autoAlpha: 0 },
+                        { opacity: 1, scale: 1, y: 0, rotate: 0, duration: 0.8, ease: "elastic.out(1, 0.5)", autoAlpha: 1 }
+                    );
+                }
+              }
+            },
+            `<${delay}`
+        );
+    });
+
+    // --- Interactive Mouse Parallax for Service Cards ---
+    servicesSection.addEventListener('mousemove', (e) => {
+        const { clientX, clientY } = e;
+        const sectionRect = servicesSection.getBoundingClientRect();
+        const centerX = sectionRect.left + sectionRect.width / 2;
+        const centerY = sectionRect.top + sectionRect.height / 2;
+
+        const offsetX = (clientX - centerX) / sectionRect.width; // -0.5 to 0.5
+        const offsetY = (clientY - centerY) / sectionRect.height; // -0.5 to 0.5
+
+        serviceCards.forEach(card => {
+            const parallaxIntensity = 15; // Adjust this value
+            const rotateIntensity = 5; // Adjust this value for rotation
+
+            const cardX = -offsetX * parallaxIntensity;
+            const cardY = -offsetY * parallaxIntensity;
+            const cardRotateX = -offsetY * rotateIntensity;
+            const cardRotateY = offsetX * rotateIntensity;
+
+            gsap.to(card, {
+                x: cardX,
+                y: cardY,
+                rotateX: cardRotateX,
+                rotateY: cardRotateY,
+                duration: 0.8, // Smoothness of the parallax effect
+                ease: "power2.out",
+                overwrite: "auto" // Prevents stacking of animations
+            });
+        });
+    });
+
+    // Reset card position when mouse leaves the section
+    servicesSection.addEventListener('mouseleave', () => {
+        serviceCards.forEach(card => {
+            gsap.to(card, {
+                x: 0,
+                y: 0,
+                rotateX: 0,
+                rotateY: 0,
+                duration: 1,
+                ease: "elastic.out(1, 0.7)"
+            });
+        });
+    });
+
+    // --- Continuous Parallax for Background Blobs on Scroll ---
+    gsap.to(servicesSection.querySelectorAll('.services-section::before, .services-section::after, .animated-shape-1, .animated-shape-2'), {
+        yPercent: -10, // Move blobs up 10% of their height on scroll
+        xPercent: 5, // Move blobs right 5% of their width on scroll
+        ease: "none",
+        scrollTrigger: {
+            trigger: servicesSection,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            // markers: true,
+        }
+    });
+
+    // GSAP for text splitting (if desired, requires SplitText plugin which is Club GreenSock)
+    // If you want per-character/word animation, you would use SplitText.
+    // For free alternative, manually wrap characters/words in spans.
+
+});
+</script>
+
+
+</body>
+</html>

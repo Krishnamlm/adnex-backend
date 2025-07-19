@@ -3,33 +3,36 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
-const User = require('../models/User'); // Assuming your User model is here
+const User = require('../models/User');
 
 passport.use(new LocalStrategy({
-        usernameField: 'email' // Use email as the username field
+        usernameField: 'email'
     },
     async (email, password, done) => {
         try {
             const user = await User.findOne({ email });
 
             if (!user) {
+                console.log('LocalStrategy: User not found for email:', email); // Log added
                 return done(null, false, { message: 'Incorrect email or password.' });
             }
 
-            // Check if the user is verified
             if (!user.isVerified) {
-                // Return done with a message that indicates not verified
+                console.log('LocalStrategy: User not verified:', email); // Log added
                 return done(null, false, { message: 'Account not verified. Please check your email for OTP.' });
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (!isMatch) {
+                console.log('LocalStrategy: Password mismatch for email:', email); // Log added
                 return done(null, false, { message: 'Incorrect email or password.' });
             }
 
-            return done(null, user); // User authenticated and verified
+            console.log('LocalStrategy: User authenticated:', user.email); // Log added
+            return done(null, user);
         } catch (err) {
+            console.error('LocalStrategy error:', err); // Log added
             return done(err);
         }
     }
@@ -37,15 +40,23 @@ passport.use(new LocalStrategy({
 
 // Serialize user
 passport.serializeUser((user, done) => {
+    console.log('serializeUser: User ID being serialized:', user.id); // Log added
     done(null, user.id);
 });
 
 // Deserialize user
 passport.deserializeUser(async (id, done) => {
     try {
+        console.log('deserializeUser: Attempting to find user with ID:', id); // Log added
         const user = await User.findById(id);
+        if (user) {
+            console.log('deserializeUser: User found:', user.email); // Log added
+        } else {
+            console.log('deserializeUser: User NOT found for ID:', id); // Log added
+        }
         done(null, user);
     } catch (err) {
+        console.error('deserializeUser error:', err); // Log added
         done(err);
     }
 });
@@ -54,53 +65,47 @@ passport.deserializeUser(async (id, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    // CRITICAL FIX: Use the full HTTPS URL for the callback
-    callbackURL: "https://adnex-backend.onrender.com/auth/google/callback"
+    callbackURL: "https://api.adnextechnologies.in/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      // 1. Try to find user by Google ID
+      console.log('GoogleStrategy: Profile received for:', profile.emails[0].value); // Log added
       let user = await User.findOne({ googleId: profile.id });
 
       if (user) {
-        // If user found by Google ID, ensure they are marked as verified if logging in via Google
+        console.log('GoogleStrategy: User found by Google ID:', user.email); // Log added
         if (!user.isVerified) {
             user.isVerified = true;
             await user.save();
+            console.log('GoogleStrategy: Marked existing Google user as verified:', user.email); // Log added
         }
         return done(null, user);
       }
 
-      // 2. If no user found by Google ID, try to find by email
       user = await User.findOne({ email: profile.emails[0].value });
 
       if (user) {
-        // If user found by email, it means an account already exists.
-        // Link this existing account to the Google ID.
-        user.googleId = profile.id; // Link Google ID
+        console.log('GoogleStrategy: User found by email, linking Google ID:', user.email); // Log added
+        user.googleId = profile.id;
         if (!user.isVerified) {
-            user.isVerified = true; // Mark as verified if logging in via Google
+            user.isVerified = true;
         }
         await user.save();
         return done(null, user);
       }
 
-      // 3. If no user found by Google ID OR email, create a new user
       user = new User({
         googleId: profile.id,
         username: profile.displayName,
         email: profile.emails[0].value,
-        isVerified: true // Google users are considered verified by default (their email is verified by Google)
+        isVerified: true
       });
       await user.save();
+      console.log('GoogleStrategy: New user created:', user.email); // Log added
       return done(null, user);
 
     } catch (err) {
-      // It's important to handle errors gracefully here.
-      // If a duplicate key error occurs during 'user.save()' when creating a new user,
-      // it means the email already exists and the above logic missed it, or there's a race condition.
-      // Passport's done(err, null) will pass the error to the next middleware.
-      console.error("Error in Google Strategy callback:", err);
+      console.error("Error in Google Strategy callback:", err); // Log added
       return done(err, null);
     }
   }

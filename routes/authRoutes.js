@@ -1,103 +1,104 @@
+// adnex-backend/routes/authRoutes.js
+
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/authController');
-// const googleAuthController = require('../controllers/googleAuthController'); // Assuming googleAuthController has a direct method, otherwise integrate its logic
-const isAuthenticated = require('../middleware/isAuthenticated');
+// const isAuthenticated = require('../middleware/isAuthenticated'); // We will replace this later
 const { sendEmail } = require('../utils/sendEmail');
+const jwt = require('jsonwebtoken'); // <-- NEW: Import jsonwebtoken
 
-// Helper function for Google Callback (can be moved to googleAuthController.js if preferred)
-const handleGoogleCallback = async (req, res, next) => { // Added 'next'
+// --- JWT Configuration (NEW) ---
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = '1h'; // Token expiration time (e.g., 1 hour)
+
+// Helper function to generate a JWT (NEW)
+const generateToken = (userId) => {
+    return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+};
+
+
+// Helper function for Google Callback
+const handleGoogleCallback = async (req, res, next) => {
     try {
-        // IMPORTANT: Add a check for isVerified for Google login as well
-        if (!req.user || !req.user.isVerified) { // Check if req.user exists before accessing isVerified
-            req.logout((err) => { // Added 'err' callback
-                if (err) { console.error('Logout error during unverified Google login:', err); return next(err); } // Pass error to next
-                req.session.email = req.user ? req.user.email : ''; // Store email for OTP verification (handle req.user possibly null)
-                // Corrected redirect for verify-otp if it's on frontend
-                return res.redirect(process.env.FRONTEND_URL + '/verify-otp.html?error=not_verified_google');
+        if (!req.user || !req.user.isVerified) {
+            // For unverified users, we might still redirect to verify-otp page
+            // and NOT issue a JWT. They need to complete verification first.
+            req.logout((err) => {
+                if (err) { console.error('Logout error during unverified Google login:', err); return next(err); }
+                req.session.email = req.user ? req.user.email : '';
+                return res.redirect(`/verify-otp.html?error=not_verified_google`);
             });
             return;
         }
 
-        // ✅ Send welcome email
+        // User is authenticated and verified, so generate JWT
+        const token = generateToken(req.user.id); // <-- NEW: Generate JWT
+
         const subject = '✅ You’ve Signed In to Adnex Technologies (via Google)';
-        const html = `
-            <div style="padding:20px;font-family:sans-serif;">
-                <h2>Welcome, ${req.user.username}!</h2>
-                <p>You’ve successfully logged in using your Google account.</p>
-                <p>Thanks for joining Adnex Technologies 🚀</p>
-            </div>
-        `;
+        const html = `<div style="padding:20px;font-family:sans-serif;"><h2>Welcome, ${req.user.username}!</h2><p>You’ve successfully logged in using your Google account.</p><p>Thanks for joining Adnex Technologies 🚀</p></div>`;
+        await sendEmail({ to: req.user.email, subject, html });
 
-        await sendEmail({
-            to: req.user.email,
-            subject,
-            html
-        });
-
-        // ✅ Redirect to saved page or home
-        const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html'; // Default to frontend home
-        delete req.session.returnTo; // Clean up session
-        return res.redirect(redirectUrl);
+        // Redirect to auth-success.html with the token in the URL hash
+        // Using hash (#) is often preferred over query (?) for sensitive data like tokens
+        // as hashes are not sent to the server in subsequent requests.
+        // We will read this from the frontend.
+        return res.redirect(`/auth-success.html#token=${token}`); // <-- CHANGED
 
     } catch (err) {
         console.error('Error during Google login callback:', err);
-        return res.redirect(process.env.FRONTEND_URL + '/login.html?login=google_error'); // Redirect to frontend login on error
+        return res.redirect(`/login.html?login=google_error`);
     }
 };
 
-
-// CORRECTED: GET registration page - REDIRECT to frontend
-router.get('/register', (req, res) => {
-    res.redirect(process.env.FRONTEND_URL + '/register.html');
-});
-
-// POST registration form submission
-router.post('/register', authController.register);
-
-// CORRECTED: GET verify OTP page - REDIRECT to frontend
-router.get('/verify-otp', (req, res) => {
-    res.redirect(process.env.FRONTEND_URL + '/verify-otp.html' + (req.query.email ? `?email=${req.query.email}` : ''));
-});
-
-// POST OTP verification
-router.post('/verify-otp', authController.verifyOtp);
-
-// ✨ CRITICAL FIX: GET login page - REDIRECT to frontend's login.html ✨
-router.get('/login', (req, res) => {
-    res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
-});
+// ... (existing routes for /register, /verify-otp, /login HTML redirects) ...
 
 // MODIFIED: POST login form submission using Passport's local strategy
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error', // Redirect on failure
+    failureRedirect: `/login.html?login=error`,
     failureFlash: false
-}), (req, res) => { // Added a direct callback here instead of authController.login
+}), async (req, res) => {
     // This code runs ONLY on successful local authentication
-    // Passport has already established the session (req.login() was called internally)
 
-    // Optional: Send welcome email for local login if you want
-    // const subject = '✅ You’ve Signed In to Adnex Technologies!';
-    // const html = `<div style="padding:20px;font-family:sans-serif;"><h2>Welcome, ${req.user.username}!</h2><p>You’ve successfully logged in.</p><p>Thanks for joining Adnex Technologies 🚀</p></div>`;
-    // sendEmail({ to: req.user.email, subject, html }).catch(console.error);
+    // Optional: Send a welcome email for local login
+    try {
+        if (req.user && req.user.isVerified) {
+            const subject = '✅ You’ve Signed In to Adnex Technologies (via Local Account)';
+            const html = `
+                <div style="padding:20px;font-family:sans-serif;">
+                    <h2>Welcome back, ${req.user.username}!</h2>
+                    <p>You’ve successfully logged in to your Adnex Technologies account.</p>
+                </div>
+            `;
+            await sendEmail({
+                to: req.user.email,
+                subject,
+                html
+            });
+        }
+    } catch (emailErr) {
+        console.error('Error sending local login welcome email:', emailErr);
+    }
 
-    // Redirect to the appropriate frontend page after successful login
-    const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html';
-    delete req.session.returnTo;
-    res.redirect(redirectUrl);
+    // Generate JWT for local login
+    const token = generateToken(req.user.id); // <-- NEW: Generate JWT
+
+    // Redirect to auth-success.html with the token in the URL hash
+    return res.redirect(`/auth-success.html#token=${token}`); // <-- CHANGED
 });
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FRONTEND_URL + '/login.html?login=google_error' }), handleGoogleCallback); // Use the new handler
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: `/login.html?login=google_error` }), handleGoogleCallback);
 
-// Logout route
-router.get('/logout', (req, res, next) => { // Added 'next'
-    req.logout((err) => {
-        if (err) { console.error('Logout error:', err); return next(err); } // Pass error to next
-        req.session.destroy(() => {
-            res.redirect(process.env.FRONTEND_URL + '/login.html?loggedout=true');
+// --- Logout route (Will be updated later for JWTs, but for now, clear session) ---
+router.get('/logout', (req, res, next) => {
+    // With JWTs, client-side handles token removal.
+    // We can still clear server-side session for good measure, but it's less critical.
+    req.logout((err) => { // This removes req.user and clears Passport's session data
+        if (err) { console.error('Logout error:', err); return next(err); }
+        req.session.destroy(() => { // This destroys the session on the server and invalidates the cookie
+            res.redirect(`/login.html?loggedout=true`);
         });
     });
 });

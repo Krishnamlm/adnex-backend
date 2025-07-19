@@ -1,16 +1,11 @@
+// routes/authRoutes.js
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const isAuthenticated = require('../middleware/isAuthenticated');
 const { sendEmail } = require('../utils/sendEmail');
-
-// IMPORTANT: Ensure FRONTEND_URL and BACKEND_URL are defined in .env
-// and correctly loaded in server.js or a config file accessible here.
-// For safety, you can add them here as well if they aren't globally available
-// via process.env in this file consistently (though they should be if dotenv is setup correctly).
-// const FRONTEND_URL = process.env.FRONTEND_URL || 'https://adnextechnologies.in';
-// const BACKEND_URL = process.env.BACKEND_URL || 'https://api.adnextechnologies.in';
+// const jwt = require('jsonwebtoken'); // <-- REMOVE THIS LINE IF YOU ADDED IT FOR JWT
 
 // Helper function for Google Callback
 const handleGoogleCallback = async (req, res, next) => {
@@ -41,11 +36,12 @@ const handleGoogleCallback = async (req, res, next) => {
             html
         });
 
-        // ✅ CRITICAL FIX: Redirect to the BACKEND protected page
-        // Use BACKEND_URL, not FRONTEND_URL, for the post-login redirect.
-        const redirectUrl = req.session.returnTo || process.env.BACKEND_URL + '/contact';
-        delete req.session.returnTo;
-        return res.redirect(redirectUrl);
+        // --- NEW CHANGE: Redirect to a frontend page designed to handle post-login redirect ---
+        // This page will then initiate the request to the backend's protected resource.
+        const frontendPostLoginHandlerUrl = `${process.env.FRONTEND_URL}/auth-success.html`;
+
+        delete req.session.returnTo; // Clear returnTo from session as it's not directly used in this flow
+        return res.redirect(frontendPostLoginHandlerUrl);
 
     } catch (err) {
         console.error('Error during Google login callback:', err);
@@ -66,21 +62,24 @@ router.get('/verify-otp', (req, res) => {
     res.redirect(process.env.FRONTEND_URL + '/verify-otp.html' + (req.query.email ? `?email=${req.query.email}` : ''));
 });
 
-// POST OTP verification
-router.post('/verify-otp', authController.verifyOtp);
-
 // ✨ CRITICAL FIX: GET login page - REDIRECT to frontend's login.html ✨
 router.get('/login', (req, res) => {
     res.redirect(process.env.FRONTEND_URL + '/login.html' + (req.query.login ? `?login=${req.query.login}` : ''));
 });
 
 // MODIFIED: POST login form submission using Passport's local strategy
+// Keep this as is for now if you still want to support local session-based login.
+// If you want JWT for local login too, this part will need similar changes.
 router.post('/login', passport.authenticate('local', {
     failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error',
     failureFlash: false
 }), (req, res) => {
     // This code runs ONLY on successful local authentication
-    const redirectUrl = req.session.returnTo || process.env.BACKEND_URL + '/contact'; // ALSO changed this to BACKEND_URL
+    // For local login, you might still want to redirect to a backend URL
+    // IF the session cookie works reliably for same-site origins.
+    // Otherwise, you could also redirect to the frontend `auth-success.html`
+    // like the Google flow, to ensure consistent behavior.
+    const redirectUrl = req.session.returnTo || process.env.BACKEND_URL + '/contact';
     delete req.session.returnTo;
     res.redirect(redirectUrl);
 });

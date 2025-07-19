@@ -24,7 +24,8 @@ const handleGoogleCallback = async (req, res, next) => {
             req.logout((err) => {
                 if (err) { console.error('Logout error during unverified Google login:', err); return next(err); }
                 req.session.email = req.user ? req.user.email : '';
-                return res.redirect(`/verify-otp.html?error=not_verified_google`);
+                // CHANGE THIS LINE: Use FRONTEND_URL
+                return res.redirect(`${process.env.FRONTEND_URL}/verify-otp.html?error=not_verified_google`);
             });
             return;
         }
@@ -36,12 +37,13 @@ const handleGoogleCallback = async (req, res, next) => {
         const html = `<div style="padding:20px;font-family:sans-serif;"><h2>Welcome, ${req.user.username}!</h2><p>You’ve successfully logged in using your Google account.</p><p>Thanks for joining Adnex Technologies 🚀</p></div>`;
         await sendEmail({ to: req.user.email, subject, html });
 
-        // Redirect to auth-success.html with the token in the URL hash
-        return res.redirect(`/auth-success.html#token=${token}`);
+        // CHANGE THIS LINE: Use FRONTEND_URL
+        return res.redirect(`${process.env.FRONTEND_URL}/auth-success.html#token=${token}`);
 
     } catch (err) {
         console.error('Error during Google login callback:', err);
-        return res.redirect(`/login.html?login=google_error`);
+        // CHANGE THIS LINE: Use FRONTEND_URL
+        return res.redirect(`${process.env.FRONTEND_URL}/login.html?login=google_error`);
     }
 };
 
@@ -58,7 +60,8 @@ router.post('/verify-otp', authController.verifyOtp);
 
 // MODIFIED: POST login form submission using Passport's local strategy
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: `/login.html?login=error`,
+    // CHANGE THIS LINE: Use FRONTEND_URL
+    failureRedirect: `${process.env.FRONTEND_URL}/login.html?login=error`,
     failureFlash: false
 }), async (req, res) => {
     // This code runs ONLY on successful local authentication
@@ -86,13 +89,16 @@ router.post('/login', passport.authenticate('local', {
     // Generate JWT for local login
     const token = generateToken(req.user.id);
 
-    // Redirect to auth-success.html with the token in the URL hash
-    return res.redirect(`/auth-success.html#token=${token}`);
+    // CHANGE THIS LINE: Use FRONTEND_URL
+    return res.redirect(`${process.env.FRONTEND_URL}/auth-success.html#token=${token}`);
 });
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: `/login.html?login=google_error` }), handleGoogleCallback);
+router.get('/google/callback', passport.authenticate('google', { 
+    // CHANGE THIS LINE: Use FRONTEND_URL
+    failureRedirect: `${process.env.FRONTEND_URL}/login.html?login=google_error` 
+}), handleGoogleCallback);
 
 // --- Logout route (Now adapted for JWT setup) ---
 router.get('/logout', (req, res, next) => {
@@ -106,7 +112,8 @@ router.get('/logout', (req, res, next) => {
         // For now, keep it for clean shutdown of any residual session data.
         req.session.destroy(() => {
             // After successful logout and session destruction, redirect to the login page.
-            res.redirect(`/login.html?loggedout=true`);
+            // CHANGE THIS LINE: Use FRONTEND_URL
+            res.redirect(`${process.env.FRONTEND_URL}/login.html?loggedout=true`);
         });
     });
 });

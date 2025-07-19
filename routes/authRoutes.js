@@ -4,26 +4,23 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/authController');
-// const isAuthenticated = require('../middleware/isAuthenticated'); // We will replace this later
+// const isAuthenticated = require('../middleware/isAuthenticated'); // Will be replaced by JWT middleware
 const { sendEmail } = require('../utils/sendEmail');
 const jwt = require('jsonwebtoken'); // <-- NEW: Import jsonwebtoken
 
-// --- JWT Configuration (NEW) ---
+// --- JWT Configuration ---
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = '1h'; // Token expiration time (e.g., 1 hour)
 
-// Helper function to generate a JWT (NEW)
+// Helper function to generate a JWT
 const generateToken = (userId) => {
     return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
-
 
 // Helper function for Google Callback
 const handleGoogleCallback = async (req, res, next) => {
     try {
         if (!req.user || !req.user.isVerified) {
-            // For unverified users, we might still redirect to verify-otp page
-            // and NOT issue a JWT. They need to complete verification first.
             req.logout((err) => {
                 if (err) { console.error('Logout error during unverified Google login:', err); return next(err); }
                 req.session.email = req.user ? req.user.email : '';
@@ -33,17 +30,14 @@ const handleGoogleCallback = async (req, res, next) => {
         }
 
         // User is authenticated and verified, so generate JWT
-        const token = generateToken(req.user.id); // <-- NEW: Generate JWT
+        const token = generateToken(req.user.id);
 
         const subject = '✅ You’ve Signed In to Adnex Technologies (via Google)';
         const html = `<div style="padding:20px;font-family:sans-serif;"><h2>Welcome, ${req.user.username}!</h2><p>You’ve successfully logged in using your Google account.</p><p>Thanks for joining Adnex Technologies 🚀</p></div>`;
         await sendEmail({ to: req.user.email, subject, html });
 
         // Redirect to auth-success.html with the token in the URL hash
-        // Using hash (#) is often preferred over query (?) for sensitive data like tokens
-        // as hashes are not sent to the server in subsequent requests.
-        // We will read this from the frontend.
-        return res.redirect(`/auth-success.html#token=${token}`); // <-- CHANGED
+        return res.redirect(`/auth-success.html#token=${token}`);
 
     } catch (err) {
         console.error('Error during Google login callback:', err);
@@ -51,7 +45,16 @@ const handleGoogleCallback = async (req, res, next) => {
     }
 };
 
-// ... (existing routes for /register, /verify-otp, /login HTML redirects) ...
+// Note: Removed the router.get('/register'), router.get('/verify-otp'), router.get('/login') HTML redirects from here.
+// These static HTML files are now served directly by server.js's `app.use(express.static('public'))`
+// and `app.get('*')` catch-all route when accessed directly (e.g., /login.html).
+// This file (authRoutes.js) should primarily handle API authentication logic.
+
+// POST registration form submission
+router.post('/register', authController.register);
+
+// POST verify OTP submission
+router.post('/verify-otp', authController.verifyOtp);
 
 // MODIFIED: POST login form submission using Passport's local strategy
 router.post('/login', passport.authenticate('local', {
@@ -81,23 +84,28 @@ router.post('/login', passport.authenticate('local', {
     }
 
     // Generate JWT for local login
-    const token = generateToken(req.user.id); // <-- NEW: Generate JWT
+    const token = generateToken(req.user.id);
 
     // Redirect to auth-success.html with the token in the URL hash
-    return res.redirect(`/auth-success.html#token=${token}`); // <-- CHANGED
+    return res.redirect(`/auth-success.html#token=${token}`);
 });
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: `/login.html?login=google_error` }), handleGoogleCallback);
 
-// --- Logout route (Will be updated later for JWTs, but for now, clear session) ---
+// --- Logout route (Now adapted for JWT setup) ---
 router.get('/logout', (req, res, next) => {
-    // With JWTs, client-side handles token removal.
-    // We can still clear server-side session for good measure, but it's less critical.
+    // With JWTs, client-side handles token removal from localStorage.
+    // We can still clear server-side session (if using sessions for other purposes)
+    // and invalidate the session cookie for good measure.
     req.logout((err) => { // This removes req.user and clears Passport's session data
         if (err) { console.error('Logout error:', err); return next(err); }
-        req.session.destroy(() => { // This destroys the session on the server and invalidates the cookie
+        // If you are relying purely on JWTs and no longer need express-session
+        // for authentication state after login, you might remove session.destroy.
+        // For now, keep it for clean shutdown of any residual session data.
+        req.session.destroy(() => {
+            // After successful logout and session destruction, redirect to the login page.
             res.redirect(`/login.html?loggedout=true`);
         });
     });

@@ -63,3 +63,54 @@ function logoutUser() {
 
 // Attach logoutUser to a global property or specific element if needed
 // Example: window.logoutUser = logoutUser;
+
+
+// ... (existing fetchProtected and logoutUser functions) ...
+
+// Intercept clicks on specific protected links
+document.addEventListener('DOMContentLoaded', () => {
+    // Select all links that point to your protected HTML routes
+    const protectedLinkSelectors = [
+        'a[href="/graphic-html"]',
+        'a[href="/internship-form"]',
+        'a[href="/contact"]',
+        'a[href="/development-html"]',
+        'a[href="/digital-html"]'
+    ];
+    const protectedLinks = document.querySelectorAll(protectedLinkSelectors.join(', '));
+
+    protectedLinks.forEach(link => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault(); // Prevent default browser navigation
+
+            const targetUrl = link.getAttribute('href');
+
+            try {
+                // Attempt to fetch the protected page.
+                // fetchProtected handles token check and redirects if unauthorized.
+                const response = await fetchProtected(targetUrl);
+
+                if (response.ok) {
+                    // If the fetch was successful, it means the token was valid.
+                    // Now, perform the actual browser navigation.
+                    // The backend will receive this new GET request for the HTML,
+                    // and since the user should now be considered authenticated (implicitly via valid token),
+                    // the backend will serve the HTML content.
+                    window.location.href = targetUrl;
+                }
+                // No need for else-if for 401/403, as fetchProtected already handles redirects in those cases.
+
+            } catch (error) {
+                // This catch handles errors thrown by fetchProtected (e.g., "Authentication required.")
+                // No need for further redirect here as fetchProtected already does it.
+                console.error('Error during protected link navigation:', error);
+            }
+        });
+    });
+
+    // Example: Attach logout function to a logout button/link
+    const logoutButton = document.getElementById('logout-button'); // Assuming you have a button with id="logout-button"
+    if (logoutButton) {
+        logoutButton.addEventListener('click', logoutUser);
+    }
+});

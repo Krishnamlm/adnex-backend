@@ -2,25 +2,30 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const authController = require('../controllers/authController');
-// const googleAuthController = require('../controllers/googleAuthController'); // Assuming googleAuthController has a direct method, otherwise integrate its logic
 const isAuthenticated = require('../middleware/isAuthenticated');
 const { sendEmail } = require('../utils/sendEmail');
 
-// Helper function for Google Callback (can be moved to googleAuthController.js if preferred)
-const handleGoogleCallback = async (req, res, next) => { // Added 'next'
+// IMPORTANT: Ensure FRONTEND_URL and BACKEND_URL are defined in .env
+// and correctly loaded in server.js or a config file accessible here.
+// For safety, you can add them here as well if they aren't globally available
+// via process.env in this file consistently (though they should be if dotenv is setup correctly).
+// const FRONTEND_URL = process.env.FRONTEND_URL || 'https://adnextechnologies.in';
+// const BACKEND_URL = process.env.BACKEND_URL || 'https://api.adnextechnologies.in';
+
+// Helper function for Google Callback
+const handleGoogleCallback = async (req, res, next) => {
     try {
         // IMPORTANT: Add a check for isVerified for Google login as well
-        if (!req.user || !req.user.isVerified) { // Check if req.user exists before accessing isVerified
-            req.logout((err) => { // Added 'err' callback
-                if (err) { console.error('Logout error during unverified Google login:', err); return next(err); } // Pass error to next
-                req.session.email = req.user ? req.user.email : ''; // Store email for OTP verification (handle req.user possibly null)
-                // Corrected redirect for verify-otp if it's on frontend
+        if (!req.user || !req.user.isVerified) {
+            req.logout((err) => {
+                if (err) { console.error('Logout error during unverified Google login:', err); return next(err); }
+                req.session.email = req.user ? req.user.email : '';
                 return res.redirect(process.env.FRONTEND_URL + '/verify-otp.html?error=not_verified_google');
             });
             return;
         }
 
-        // ✅ Send welcome email
+        // ✅ Send welcome email (as implemented)
         const subject = '✅ You’ve Signed In to Adnex Technologies (via Google)';
         const html = `
             <div style="padding:20px;font-family:sans-serif;">
@@ -36,9 +41,10 @@ const handleGoogleCallback = async (req, res, next) => { // Added 'next'
             html
         });
 
-        // ✅ Redirect to saved page or home
-        const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html'; // Default to frontend home
-        delete req.session.returnTo; // Clean up session
+        // ✅ CRITICAL FIX: Redirect to the BACKEND protected page
+        // Use BACKEND_URL, not FRONTEND_URL, for the post-login redirect.
+        const redirectUrl = req.session.returnTo || process.env.BACKEND_URL + '/contact';
+        delete req.session.returnTo;
         return res.redirect(redirectUrl);
 
     } catch (err) {
@@ -46,7 +52,6 @@ const handleGoogleCallback = async (req, res, next) => { // Added 'next'
         return res.redirect(process.env.FRONTEND_URL + '/login.html?login=google_error'); // Redirect to frontend login on error
     }
 };
-
 
 // CORRECTED: GET registration page - REDIRECT to frontend
 router.get('/register', (req, res) => {
@@ -71,31 +76,23 @@ router.get('/login', (req, res) => {
 
 // MODIFIED: POST login form submission using Passport's local strategy
 router.post('/login', passport.authenticate('local', {
-    failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error', // Redirect on failure
+    failureRedirect: process.env.FRONTEND_URL + '/login.html?login=error',
     failureFlash: false
-}), (req, res) => { // Added a direct callback here instead of authController.login
+}), (req, res) => {
     // This code runs ONLY on successful local authentication
-    // Passport has already established the session (req.login() was called internally)
-
-    // Optional: Send welcome email for local login if you want
-    // const subject = '✅ You’ve Signed In to Adnex Technologies!';
-    // const html = `<div style="padding:20px;font-family:sans-serif;"><h2>Welcome, ${req.user.username}!</h2><p>You’ve successfully logged in.</p><p>Thanks for joining Adnex Technologies 🚀</p></div>`;
-    // sendEmail({ to: req.user.email, subject, html }).catch(console.error);
-
-    // Redirect to the appropriate frontend page after successful login
-    const redirectUrl = req.session.returnTo || process.env.FRONTEND_URL + '/index.html';
+    const redirectUrl = req.session.returnTo || process.env.BACKEND_URL + '/contact'; // ALSO changed this to BACKEND_URL
     delete req.session.returnTo;
     res.redirect(redirectUrl);
 });
 
 // Google OAuth routes
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FRONTEND_URL + '/login.html?login=google_error' }), handleGoogleCallback); // Use the new handler
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.FRONTEND_URL + '/login.html?login=google_error' }), handleGoogleCallback);
 
 // Logout route
-router.get('/logout', (req, res, next) => { // Added 'next'
+router.get('/logout', (req, res, next) => {
     req.logout((err) => {
-        if (err) { console.error('Logout error:', err); return next(err); } // Pass error to next
+        if (err) { console.error('Logout error:', err); return next(err); }
         req.session.destroy(() => {
             res.redirect(process.env.FRONTEND_URL + '/login.html?loggedout=true');
         });

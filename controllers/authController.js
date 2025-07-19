@@ -382,7 +382,7 @@ exports.login = async (req, res) => {
 
         // Redirect to the stored URL or default to the FRONTEND's index.html
 
-        const redirectUrl = req.session.returnTo || `https://api.adnextechnologies.in/dashboard`;
+        const redirectUrl = req.session.returnTo || `https://api.adnextechnologies.in/contact`; 
 
 
 

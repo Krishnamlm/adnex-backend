@@ -158,6 +158,7 @@ exports.login = async (req, res) => {
                 <p style="color:#333;font-size:16px;line-height:1.5;margin:20px 0;">
                     Hey ${req.user.username}, you're now securely logged into your Adnex Technologies account.
                 </p>
+
                 <p style="font-size:16px;color:#555;line-height:1.5;">At Adnex, we specialize in:</p>
 <!-- Container block -->
 <!-- Container for services -->
@@ -195,9 +196,9 @@ exports.login = async (req, res) => {
 
         await sendEmail({ to: req.user.email, subject, html });
 
-        // Redirect to the stored URL or default to a protected page on the BACKEND
-        // IMPORTANT: Change '/contact' to your desired default protected page URL
-        const redirectUrl = req.session.returnTo || `${BACKEND_URL}/contact`; // Changed to use BACKEND_URL
+        // Redirect to the stored URL or default to a protected page on the FRONTEND
+        // IMPORTANT: Change '/contact.html' to your desired default protected page URL on the frontend
+        const redirectUrl = req.session.returnTo || `${FRONTEND_URL}/contact.html`; // Changed to use FRONTEND_URL and .html
 
         delete req.session.returnTo;
         return res.redirect(redirectUrl);
@@ -217,15 +218,13 @@ exports.googleCallback = async (req, res) => {
             throw new Error('No user found in session');
         }
 
-        // If user is not verified, redirect to OTP verification (on backend)
+        // If user is not verified, redirect to OTP verification (on frontend)
         if (!user.isVerified) {
             req.session.email = user.email;
-            return res.redirect(`${BACKEND_URL}/verify-otp`); // Changed to use BACKEND_URL
+            return res.redirect(`${FRONTEND_URL}/verify-otp.html`); // Changed to use FRONTEND_URL and .html
         }
 
         // User is verified — create session and send welcome email
-        // Passport.js usually handles session creation, so req.session.userId might be redundant
-        // but it doesn't hurt.
         req.session.userId = user._id;
 
         await sendEmail({
@@ -275,9 +274,9 @@ exports.googleCallback = async (req, res) => {
         </body>`,
         });
 
-        // IMPORTANT: Redirect to a protected page on the BACKEND domain
+        // IMPORTANT: Redirect to a protected page on the FRONTEND domain
         // Use the full URL to avoid relative path issues or falling through
-        const redirectUrl = req.session.returnTo || `${BACKEND_URL}/contact`; // Changed to use BACKEND_URL
+        const redirectUrl = req.session.returnTo || `${FRONTEND_URL}/contact.html`; // Changed to use FRONTEND_URL and .html
 
         delete req.session.returnTo;
         return res.redirect(redirectUrl);
